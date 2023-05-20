@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { gasEstimateForUnprovenTransfer } from '@railgun-community/quickstart';
 import {
   NetworkName,
@@ -8,6 +8,7 @@ import {
   TransactionGasDetailsSerialized,
   EVMGasType,
 } from '@railgun-community/shared-models';
+import { useSigner } from 'wagmi';
 
 type UseGasEstimateMultiTransferParams = {
   railgunAddress: string;
@@ -24,6 +25,10 @@ export function useGasEstimateMultiTransfer({
 }: UseGasEstimateMultiTransferParams) {
   const [gasEstimate, setGasEstimate] = useState<BigNumber | null>(null);
   const [estimateError, setEstimateError] = useState<string | null>(null);
+
+  const { data: signer } = useSigner({
+    chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
+  });
 
   const fetchGasEstimate = useCallback(async () => {
     const wallet: string | null = localStorage.getItem('wallet');
@@ -51,11 +56,17 @@ export function useGasEstimateMultiTransfer({
       },
     ];
 
+    const feeData = await signer?.getFeeData();
+    console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
+    const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
+    console.log('gasPrice', gasPrice);
+
     const originalGasDetailsSerialized: TransactionGasDetailsSerialized = {
       evmGasType: EVMGasType.Type2,
       gasEstimateString: '0x00',
-      maxFeePerGasString: '0x100000',
-      maxPriorityFeePerGasString: '0x010000',
+      maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
+      maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+      // gasPriceString: gasPrice,
     };
 
     const feeTokenDetails: FeeTokenDetails = {
@@ -63,7 +74,7 @@ export function useGasEstimateMultiTransfer({
       feePerUnitGas: selectedRelayer.feePerUnitGas,
     };
 
-    const sendWithPublicWallet = false;
+    const sendWithPublicWallet = true;
 
     const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
       NetworkName.EthereumGoerli,
@@ -83,7 +94,7 @@ export function useGasEstimateMultiTransfer({
     }
 
     setGasEstimate(BigNumber.from(gasEstimateString));
-  }, [railgunAddress, railgunWalletID, selectedTokenFeeAddress, selectedRelayer]);
+  }, [railgunAddress, railgunWalletID, selectedTokenFeeAddress, selectedRelayer, signer]);
 
   return { gasEstimate, estimateError, fetchGasEstimate };
 }

@@ -9,6 +9,7 @@ function Send() {
 
   const {
     fetchGasEstimate,
+    gasEstimate,
     executeGenerateTransferProof,
     createPopulateProvedTransfer,
     serializedTransaction,
@@ -26,7 +27,7 @@ function Send() {
     return;
   }, [executeGenerateTransferProof]);
 
-  const gasEstimate = useCallback(() => {
+  const callGasEstimate = useCallback(() => {
     console.log('Get the gas esimate!');
     console.log('should call function exposed from context.');
     console.log('this: ', { fetchGasEstimate });
@@ -41,14 +42,18 @@ function Send() {
     console.log('create the Populated Transaction');
     console.log('should call function exposed from context.');
     console.log('this: ', { executeGenerateTransferProof });
+    if (!gasEstimate) {
+      console.log('no gas estimate, so we can not create the populated transaction.');
+      return;
+    }
     if (createPopulateProvedTransfer) {
       console.log("it exists, let's call it.");
-      createPopulateProvedTransfer();
+      createPopulateProvedTransfer(gasEstimate);
     } else {
       console.log("createPopulateProvedTransfer doesn't exist, so we can't call it.");
     }
     return;
-  }, [createPopulateProvedTransfer]);
+  }, [createPopulateProvedTransfer, gasEstimate]);
 
   const runExecuteSendTransaction = useCallback(() => {
     console.log('run the executeSendTransaction');
@@ -86,7 +91,7 @@ function Send() {
       <button
         type='button'
         className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
-        onClick={gasEstimate}>
+        onClick={callGasEstimate}>
         Get Gas Estimate.
       </button>
       <button

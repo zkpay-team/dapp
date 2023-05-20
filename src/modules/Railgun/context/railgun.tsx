@@ -33,8 +33,9 @@ interface localStoreWallet {
     railgunAddress: string;
   };
   fetchGasEstimate: () => Promise<void>;
+  gasEstimate: BigNumber | null;
   executeGenerateTransferProof: () => Promise<void>;
-  createPopulateProvedTransfer: () => Promise<void>;
+  createPopulateProvedTransfer: (gasEstimate: BigNumber | null) => Promise<void>;
   serializedTransaction: string | undefined;
   executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
 }
@@ -49,8 +50,9 @@ const RailgunContext = react.createContext<{
   createWallet?: () => void;
   wallet?: LoadRailgunWalletResponse;
   fetchGasEstimate?: () => Promise<void>;
+  gasEstimate?: BigNumber | null;
   executeGenerateTransferProof?: () => Promise<void>;
-  createPopulateProvedTransfer?: () => Promise<void>;
+  createPopulateProvedTransfer?: (gasEstimate: BigNumber | null) => Promise<void>;
   serializedTransaction?: string;
   executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
   balances: Balances;
@@ -101,7 +103,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   const { proofError, executeGenerateTransferProof } = useGenerateTransferProof({
     railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
     tokenAmountRecipients: tokenAmountRecipients,
-    sendWithPublicWallet: false,
+    sendWithPublicWallet: true,
     overallBatchMinGasPrice: '0',
   });
 
@@ -117,7 +119,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     usePopulateProvedTransfer({
       railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
       tokenAmountRecipients: tokenAmountRecipients,
-      sendWithPublicWallet: false,
+      sendWithPublicWallet: true,
       overallBatchMinGasPrice: '0',
     });
 
@@ -245,6 +247,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       createWallet: createWallet,
       wallet: wallet,
       fetchGasEstimate: fetchGasEstimate,
+      gasEstimate: gasEstimate,
       executeGenerateTransferProof: executeGenerateTransferProof,
       createPopulateProvedTransfer: createPopulateProvedTransfer,
       balances: balances,
@@ -256,6 +259,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     isProviderLoaded,
     wallet,
     fetchGasEstimate,
+    gasEstimate,
     executeGenerateTransferProof,
     createPopulateProvedTransfer,
     serializedTransaction,

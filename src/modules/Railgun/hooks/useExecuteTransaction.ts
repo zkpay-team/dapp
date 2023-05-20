@@ -1,7 +1,10 @@
 import { useCallback, useEffect, useContext } from 'react';
 import { ethers } from 'ethers';
-import { useSigner, useProvider } from 'wagmi';
+import { useSigner, useProvider, chain } from 'wagmi';
 import RailgunContext from '../context/railgun';
+import { sign } from 'crypto';
+
+import { deserializeTransaction } from '@railgun-community/shared-models';
 
 export function useExecuteTransaction() {
   const { data: signer } = useSigner({
@@ -28,30 +31,33 @@ export function useExecuteTransaction() {
           console.error('Missing signer.');
           return;
         }
+
+        const address = await signer.getAddress();
+        const nonce = await provider.getTransactionCount(address, 'pending');
+
         // Deserialize the transaction
-        const deserializedTransaction = ethers.utils.parseTransaction(serializedTransaction);
+        const transactionReq = deserializeTransaction(serializedTransaction, nonce, 5);
+        console.log('🚀 ~ file: useExecuteTransaction.ts:36 ~ transactionReq:', transactionReq);
 
-        // Prepare transaction request
-        const transactionRequest = {
-          to: deserializedTransaction.to,
-          value: deserializedTransaction.value,
-          nonce: deserializedTransaction.nonce,
-          gasLimit: deserializedTransaction.gasLimit,
-          gasPrice: deserializedTransaction.gasPrice,
-          data: deserializedTransaction.data,
-          chainId: deserializedTransaction.chainId,
-        };
+        transactionReq.from = await signer.getAddress();
 
-        // Connect to the signer
-        const connectedSigner = signer.connect(provider);
-
-        // Sign the transaction
-        const signedTransaction = await connectedSigner.signTransaction(transactionRequest);
+        console.log('await signer.getAddress()', await signer.getAddress());
 
         // Send the transaction
-        const txResponse = await provider.sendTransaction(signedTransaction);
+        let txResponse;
+        try {
+          txResponse = await signer.sendTransaction(transactionReq);
+        } catch (error) {
+          console.log('Error sending transaction:', error);
+        }
 
         // Wait for the transaction to be mined
+        if (!txResponse) {
+          console.error('Missing txResponse.');
+          return;
+        }
+
+        console.log('waiting...');
         const receipt = await txResponse.wait();
 
         console.log('Transaction successfully mined:', receipt);
