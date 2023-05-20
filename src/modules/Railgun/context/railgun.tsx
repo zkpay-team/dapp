@@ -11,8 +11,9 @@ import { IAccount } from '../../../types';
 import { initializeRailgun, loadProviders } from '../utils/setup';
 import { LoadRailgunWalletResponse } from '@railgun-community/shared-models';
 import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
-import { NetworkName } from '@railgun-community/shared-models';
+import { NetworkName, RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
+import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
 
 declare global {
   interface Window {
@@ -26,6 +27,8 @@ interface localStoreWallet {
     id: string;
     railgunAddress: string;
   };
+  fetchGasEstimate: () => Promise<void>;
+  executeGenerateTransferProof: () => Promise<void>;
 }
 
 const RailgunContext = createContext<{
@@ -33,6 +36,8 @@ const RailgunContext = createContext<{
   account?: IAccount;
   createWallet?: () => void;
   wallet?: LoadRailgunWalletResponse;
+  fetchGasEstimate?: () => Promise<void>;
+  executeGenerateTransferProof?: () => Promise<void>;
 }>({
   isProviderLoaded: false,
 });
@@ -48,24 +53,40 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
 
   console.log('RailgunProvider', { isProviderLoaded });
 
-  const { gasEstimate, error } = useGasEstimateMultiTransfer({
+  const { gasEstimate, estimateError, fetchGasEstimate } = useGasEstimateMultiTransfer({
     railgunAddress:
       '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel' ||
       '',
     railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-    selectedTokenFeeAddress: '0x00000000000000000000000',
+    selectedTokenFeeAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', //goerli dai
     selectedRelayer: {
       feePerUnitGas: '0',
     },
   });
 
   useEffect(() => {
-    console.log('logging gasEstimate returned from hook: ', { gasEstimate });
-  }, [gasEstimate]);
+    console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { estimateError });
+  }, [estimateError]);
+
+  const tokenAmountRecipients: RailgunERC20AmountRecipient[] = [
+    {
+      tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
+      amountString: '0x10', // hexadecimal amount decimal meaning 16
+      recipientAddress:
+        '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+    },
+  ];
+
+  const { proofError, executeGenerateTransferProof } = useGenerateTransferProof({
+    railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+    tokenAmountRecipients: tokenAmountRecipients,
+    sendWithPublicWallet: false,
+    overallBatchMinGasPrice: '0',
+  });
 
   useEffect(() => {
-    console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { error });
-  }, [error]);
+    console.log('proofError: ', proofError);
+  }, [proofError]);
 
   useEffect(() => {
     const fn = async () => {
@@ -151,8 +172,10 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
       isProviderLoaded: isProviderLoaded,
       createWallet: createWallet,
       wallet: wallet,
+      fetchGasEstimate: fetchGasEstimate,
+      executeGenerateTransferProof: executeGenerateTransferProof,
     };
-  }, [account.address, isProviderLoaded, wallet]);
+  }, [account.address, isProviderLoaded, wallet, fetchGasEstimate]);
 
   return <RailgunContext.Provider value={value}>{children}</RailgunContext.Provider>;
 };
