@@ -61,12 +61,12 @@ function UserProposalItem({ proposal }: { proposal: IProposal }) {
             {renderTokenAmount(proposal.rateToken, proposal.rateAmount)}
           </p>
           <Link
-            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg'
+            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded'
             href={`/services/${proposal.service.id}`}>
             Show Job
           </Link>
           {isBuyer && proposal.status === ProposalStatusEnum.Pending && (
-            <button className='text-green-600 bg-green-50 hover:bg-greeny hover:text-white px-5 py-2 rounded-lg'>
+            <button className='text-green-600 bg-green-50 hover:bg-greeny hover:text-white px-5 py-2 rounded'>
               Validate proposal
             </button>
           )}

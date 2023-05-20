@@ -88,7 +88,7 @@ function ReleaseForm({
             <button
               type='button'
               onClick={releaseMin}
-              className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
+              className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
               Min
             </button>
           </div>
@@ -96,7 +96,7 @@ function ReleaseForm({
             <button
               type='button'
               onClick={releaseMax}
-              className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
+              className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
               Max
             </button>
           </div>
@@ -128,14 +128,14 @@ function ReleaseForm({
               {totalInEscrow.gt(0) && (
                 <button
                   type='submit'
-                  className=' hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg'>
+                  className=' hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'>
                   {isBuyer ? 'Release the selected amount' : 'Reimburse the selected amount'}
                 </button>
               )}
               <button
                 onClick={closeModal}
                 type='button'
-                className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded-lg border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
+                className='text-gray-500 bg-white hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-blue-300 rounded border border-greeny text-sm font-medium px-5 py-2.5 hover:text-gray-900 focus:z-10 '>
                 Close
               </button>
             </div>

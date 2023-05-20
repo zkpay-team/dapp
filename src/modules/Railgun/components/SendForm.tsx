@@ -1,4 +1,4 @@
-import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik';
 import * as Yup from 'yup';
 import SubmitButton from '../../../components/Form/SubmitButton';
 import { tokens } from './TokenList';
@@ -9,16 +9,29 @@ import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
 
 interface IFormValues {
-  to: string;
   token: string;
+  recipients: Recipient[];
+}
+
+interface Recipient {
+  to: string;
   amount: number;
 }
 
+// @dev to test it: ?token=0xdc31ee1784292379fbb2964b3b9c4124d8f89c60&amount[0]=10&to[0]=0zk1qyy6yz7c2h5cxyyrzgxvql9clj2gu6u6f7dszt5trhhn0xm5zug7frv7j6fe3z53laydg6xztk8z5w2y37wmy3u9y64q7fpq53d32cn90tmlra5kveqqjeluam2&amount[1]=30&to[1]=0zk123456789123456789
 const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
   return {
-    to: (query.to as string) || '',
-    token: (query.token as string) || '',
-    amount: parseInt(query.amount as string) || 0,
+    token: (query['token'] as string) || '',
+    recipients: [
+      {
+        to: (query['to[0]'] as string) || '',
+        amount: parseInt(query['amount[0]'] as string) || 0,
+      },
+      {
+        to: (query['to[1]'] as string) || '',
+        amount: parseInt(query['amount[1]'] as string) || 0,
+      },
+    ],
   };
 };
 
@@ -36,15 +49,14 @@ function SendForm() {
 
   const validationSchema = Yup.object({
     token: Yup.string().required('Please select a token'),
-    amount: Yup.number().required('Please provide an amount'),
-    to: Yup.number().required('Please provide a recipient'),
   });
 
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
-    console.log(values);
-    const text = `https://zkpay.herokuapp.com/send?to=${wallet.railgunWalletInfo?.railgunAddress}&token=${values.token}&amount=${values.amount}`;
-    navigator.clipboard.writeText(text);
-    toast('Share link copied', {
+    console.log('values', { values });
+
+    // TODO: format values (remove empty row)
+
+    toast('Money sended!', {
       position: 'bottom-right',
       autoClose: 5000,
       hideProgressBar: false,
@@ -58,7 +70,7 @@ function SendForm() {
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({ isSubmitting, errors }) => (
+      {({ isSubmitting, values }) => (
         <Form>
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>
@@ -82,39 +94,53 @@ function SendForm() {
                 </span>
               </p>
             </label>
-            <div className='flex'>
-              <label className='block mr-4'>
-                <span className='text-gray-200'>To</span>
-                <Field
-                  type='text'
-                  id='to'
-                  name='to'
-                  className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
-                  placeholder=''
-                />
-              </label>
-              <label className='block'>
-                <span className='text-gray-200'>Amount</span>
-                <Field
-                  type='number'
-                  id='amount'
-                  name='amount'
-                  className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
-                  placeholder=''
-                />
-              </label>
-            </div>
-
-            {(errors.amount || errors.token) && (
-              <p>
-                <span className='text-red-500 mt-2'>
-                  <ErrorMessage name='amount' />
-                </span>
-                <span className='text-red-500'>
-                  <ErrorMessage name='to' />
-                </span>
-              </p>
-            )}
+            <FieldArray name='recipients'>
+              {({ push }) => (
+                <div className='mb-2'>
+                  {values.recipients.length > 0 &&
+                    values.recipients.map((recipient, index) => (
+                      <div className='row' key={index}>
+                        <div className='flex'>
+                          <label className='block mr-4'>
+                            <span className='text-gray-200'>To</span>
+                            <Field
+                              type='text'
+                              id='to'
+                              name={`recipients.${index}.to`}
+                              className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                              placeholder=''
+                            />
+                          </label>
+                          <label className='block'>
+                            <span className='text-gray-200'>Amount</span>
+                            <Field
+                              type='number'
+                              id='amount'
+                              name={`recipients.${index}.amount`}
+                              className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                              placeholder=''
+                            />
+                          </label>
+                        </div>
+                        <p>
+                          <span className='text-red-500 mt-2'>
+                            <ErrorMessage name={`recipients.${index}.amount`} />
+                          </span>
+                          <span className='text-red-500'>
+                            <ErrorMessage name={`recipients.${index}.to`} />
+                          </span>
+                        </p>
+                      </div>
+                    ))}
+                  <button
+                    type='button'
+                    className='mt-2 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
+                    onClick={() => push({ amount: '', to: '' })}>
+                    Add Recipient
+                  </button>
+                </div>
+              )}
+            </FieldArray>
 
             <SubmitButton isSubmitting={isSubmitting} label='Send' />
           </div>

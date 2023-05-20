@@ -18,7 +18,7 @@ function MultiStepsTransactionToast({
         className='flex flex-col text-sm font-normal w-full pt-2'
         target='_blank'
         href={`${network.chain?.blockExplorers?.default.url}/tx/${transactionHash}`}>
-        <span className='inline-flex full-w justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 '>
+        <span className='inline-flex full-w justify-center w-full px-2 py-1.5 text-xs font-medium text-center text-gray-900 bg-white border border-gray-300 rounded hover:bg-gray-100 focus:ring-4 focus:outline-none focus:ring-gray-200 '>
           Follow on {network.chain?.blockExplorers?.default.name}
         </span>
       </a>

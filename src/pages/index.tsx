@@ -23,7 +23,7 @@ function Home() {
           </p>
           <button
             type='button'
-            className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg w-full mt-6'
+            className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded w-full mt-6'
             onClick={createWallet}>
             Create your Wallet
           </button>
