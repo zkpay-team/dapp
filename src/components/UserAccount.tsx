@@ -18,7 +18,7 @@ function UserAccount() {
         {/* Profile dropdown */}
         <Menu as='div' className='relative'>
           <div>
-            {account && account.isConnected === true && (
+            {account && account.isConnected === true ? (
               <div className='flex items-center'>
                 <Menu.Button className='flex max-w-xs items-center rounded-full bg-white text-sm focus:outline-none focus:ring-2 focus:ring-rose-500 focus:ring-offset-2'>
                   <span className='sr-only'>Open user menu</span>
@@ -52,6 +52,8 @@ function UserAccount() {
                   </p>
                 </Menu.Button>
               </div>
+            ) : (
+              <ConnectButton />
             )}
           </div>
           <Transition

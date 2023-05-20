@@ -75,7 +75,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
       if (savedWalletString) {
         const savedWallet = JSON.parse(savedWalletString) as localStoreWallet;
         console.log('savedWallet', savedWallet);
-        if (!savedWallet.encryptionKey || savedWallet.railgunWalletInfo.id) {
+        if (!savedWallet.encryptionKey || !savedWallet.railgunWalletInfo.id) {
           return;
         }
         const railgunWallet = await loadWalletByID(
