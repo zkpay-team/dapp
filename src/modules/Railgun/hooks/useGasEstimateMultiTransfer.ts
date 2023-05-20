@@ -9,11 +9,12 @@ import {
   EVMGasType,
 } from '@railgun-community/shared-models';
 
+// Define the parameters for the hook
 type UseGasEstimateMultiTransferParams = {
-  railgunAddress: string;
-  railgunWalletID: string;
-  selectedTokenFeeAddress: string;
-  selectedRelayer: { feePerUnitGas: string };
+  railgunAddress: string; // RAILGUN wallet to transfer to.
+  railgunWalletID: string; // Database encryption key. Keep this very safe.
+  selectedTokenFeeAddress: string; // Token Fee for selected Relayer.
+  selectedRelayer: { feePerUnitGas: string }; // Fee per unit gas for the selected relayer
 };
 
 export function useGasEstimateMultiTransfer({
@@ -27,35 +28,38 @@ export function useGasEstimateMultiTransfer({
 
   useEffect(() => {
     const fetchGasEstimate = async () => {
-      // Constants can be replaced with dynamic values as necessary
       const encryptionKey = '0101010101010101010101010101010101010101010101010101010101010101';
-      const memoText = 'Getting the salariess! 🍝😋';
+      const memoText = 'Getting the salariess! 🍝😋'; // Optional encrypted memo text only readable by the sender and receiver.
 
+      // Formatted token amounts to transfer.
       const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
         {
           tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-          amountString: '0x10', // hexadecimal amount decimal amout meaning 16
+          amountString: '0x10', // hexadecimal amount decimal meaning 16
           recipientAddress: railgunAddress,
         },
-        {
-          tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-          amountString: '0x10', // hexadecimal amount meaning 16
-          recipientAddress: railgunAddress,
-        },
+        // {
+        //   tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
+        //   amountString: '0x10', // hexadecimal amount meaning 16
+        //   recipientAddress: railgunAddress,
+        // },
       ];
 
+      // Gas price, used to calculate Relayer Fee iteratively.
       const originalGasDetailsSerialized: TransactionGasDetailsSerialized = {
-        evmGasType: EVMGasType.Type2,
-        gasEstimateString: '0x00',
-        maxFeePerGasString: '0x100000',
-        maxPriorityFeePerGasString: '0x010000',
+        evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0)
+        gasEstimateString: '0x00', // Always 0, we don't have this yet.
+        maxFeePerGasString: '0x100000', // Current gas Max Fee
+        maxPriorityFeePerGasString: '0x010000', // Current gas Max Priority Fee
       };
 
+      // Token Fee for selected Relayer.
       const feeTokenDetails: FeeTokenDetails = {
         tokenAddress: selectedTokenFeeAddress,
         feePerUnitGas: selectedRelayer.feePerUnitGas,
       };
 
+      // Whether to use a Relayer or self-signing wallet. True for self-signing, false for Relayer.
       const sendWithPublicWallet = false;
 
       const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
@@ -64,22 +68,22 @@ export function useGasEstimateMultiTransfer({
         encryptionKey,
         memoText,
         erc20AmountRecipients,
-        [],
+        [], // nftAmountRecipients
         originalGasDetailsSerialized,
         feeTokenDetails,
         sendWithPublicWallet,
       );
 
       if (error) {
-        setError(error);
+        setError(error); // Handle gas estimate error.
         return;
       }
 
-      setGasEstimate(BigNumber.from(gasEstimateString));
+      setGasEstimate(BigNumber.from(gasEstimateString)); // Save the gas estimate
     };
 
     fetchGasEstimate();
   }, [railgunAddress, railgunWalletID, selectedTokenFeeAddress, selectedRelayer]);
 
-  return { gasEstimate, error };
+  return { gasEstimate, error }; // Return the gas estimate and error if any
 }
