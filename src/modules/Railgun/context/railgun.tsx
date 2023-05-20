@@ -4,7 +4,6 @@ import { useAccount } from 'wagmi';
 import { getProver, Groth16 } from '@railgun-community/quickstart';
 import { IAccount } from '../../../types';
 import { initializeRailgun, loadProviders } from '../utils/setup';
-import { useRailgunProvider } from '../hooks/useRailgunProvider';
 
 declare global {
   interface Window {
