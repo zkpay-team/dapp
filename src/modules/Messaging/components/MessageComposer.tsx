@@ -18,11 +18,12 @@ const MessageComposer = ({
   peerUserExistsOnXMTP,
   peerUserExistsOnTalentLayer,
 }: IMessageComposerProps) => {
+  console.log('MessageComposer');
   const renderSendButton = (peerUserExists: boolean, sendingPending: boolean) => {
     return (
       !sendingPending && (
         <button
-          className='bg-zinc-500 hover:bg-midnight text-white font-bold py-2 px-4 rounded-full'
+          className='bg-zinc-500 hover:bg-midnight text-white font-bold py-2 px-4 rounded -ml-2'
           onClick={sendNewMessage}
           disabled={!peerUserExists || !peerUserExistsOnTalentLayer}>
           Send
@@ -33,9 +34,9 @@ const MessageComposer = ({
 
   return (
     <>
-      <div className='flex flex-row space-x-5 py-5 pr-5'>
+      <div className='flex flex-row py-5 pr-5'>
         <input
-          className='w-full  py-2 px-3 rounded-xl'
+          className='w-full  py-2 px-3 rounded'
           type='text'
           onChange={e => setMessageContent(e.target.value)}
           placeholder='Write a message'

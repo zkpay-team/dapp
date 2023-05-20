@@ -55,7 +55,7 @@ function DelegateModal() {
       {process.env.NEXT_PUBLIC_ACTIVE_DELEGATE === 'true' && (
         <button
           onClick={() => setShow(true)}
-          className='block text-blue-600 bg-red-50 hover:bg-green-500 hover:text-white rounded-lg px-5 py-2.5 text-center'
+          className='block text-blue-600 bg-red-50 hover:bg-greeny hover:text-white rounded px-5 py-2.5 text-center'
           type='button'
           data-modal-toggle='defaultModal'>
           Active Delegation
@@ -67,7 +67,7 @@ function DelegateModal() {
           !show ? 'hidden' : ''
         } overflow-y-auto overflow-x-hidden fixed top-0 right-0 left-0 z-50 w-full md:inset-0 h-modal h-full bg-black/75 flex flex-col items-center justify-center`}>
         <div className='relative p-4 w-full max-w-2xl h-auto'>
-          <div className='relative bg-white rounded-lg shadow '>
+          <div className='relative bg-white rounded shadow '>
             <div className='flex justify-between items-start p-4 rounded-t border-b '>
               <h3 className='text-xl font-semibold text-gray-900 '>
                 Delegate activation information
@@ -76,7 +76,7 @@ function DelegateModal() {
               <button
                 onClick={() => setShow(false)}
                 type='button'
-                className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm p-1.5 ml-auto inline-flex items-center '
+                className='text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded text-sm p-1.5 ml-auto inline-flex items-center '
                 data-modal-toggle='defaultModal'>
                 <svg
                   className='w-5 h-5'
@@ -114,14 +114,14 @@ function DelegateModal() {
                 <button
                   onClick={() => onSubmit(false)}
                   type='button'
-                  className='hover:text-blue-600 hover:bg-red-50 bg-red-500 text-white rounded-lg px-5 py-2.5 text-center'>
+                  className='hover:text-blue-600 hover:bg-red-50 bg-red-500 text-white rounded px-5 py-2.5 text-center'>
                   Cancel Delegation
                 </button>
               ) : (
                 <button
                   onClick={() => onSubmit(true)}
                   type='button'
-                  className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white rounded-lg px-5 py-2.5 text-center'>
+                  className='hover:text-green-600 hover:bg-green-50 bg-greeny text-white rounded px-5 py-2.5 text-center'>
                   Validate Delegation
                 </button>
               )}

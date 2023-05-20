@@ -40,9 +40,8 @@ export const formatTimestampDateConversationCard = (timestamp: number | undefine
 export const formatDateConversationCard = (date: Date | undefined) => {
   if (!date) return '';
   return date.toLocaleString('en-US', {
-    year: 'numeric',
-    month: 'numeric',
-    day: 'numeric',
+    hour: 'numeric',
+    minute: 'numeric',
   });
 };
 

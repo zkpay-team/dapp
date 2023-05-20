@@ -33,19 +33,20 @@ export function useGasEstimateMultiTransfer({
 
   const fetchGasEstimate = useCallback(async () => {
     const wallet: string | null = localStorage.getItem('wallet');
-    let encryptionKey: string;
 
-    if (wallet !== null) {
-      const walletObject: { encryptionKey?: string } = JSON.parse(wallet);
-
-      if ('encryptionKey' in walletObject) {
-        encryptionKey = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
-      } else {
-        console.error('encryptionKey does not exist in the wallet object.');
-      }
-    } else {
+    if (wallet === null) {
       console.error("No 'wallet' object in local storage.");
+      return;
     }
+
+    const walletObject: { encryptionKey?: string } = JSON.parse(wallet);
+
+    if (!('encryptionKey' in walletObject)) {
+      console.error('encryptionKey does not exist in the wallet object.');
+      return;
+    }
+
+    const encryptionKey: string = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
 
     const memoText = 'Getting the salariess! 🍝😋';
     const feeData = await signer?.getFeeData();

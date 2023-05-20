@@ -1,5 +1,6 @@
 import { useCallback, useContext } from 'react';
 import RailgunContext from '../modules/Railgun/context/railgun';
+import SendForm from '../modules/Railgun/components/SendForm';
 
 function Send() {
   const { account } = useContext(RailgunContext);
@@ -72,11 +73,14 @@ function Send() {
   return (
     <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
       <p className='text-3xl font-medium mb-8'>
-        Payroll <span className='text-gray-100'>multisend </span>
+        Multisend <span className='text-gray-100'>privately</span>
       </p>
+      <div className='mt-10'>
+        <SendForm />
+      </div>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
         onClick={createProof}>
         Create Proof to Send.
       </button>
@@ -94,7 +98,7 @@ function Send() {
       </button>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
         onClick={() => {
           runExecuteSendTransaction();
         }}>

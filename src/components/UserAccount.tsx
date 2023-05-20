@@ -14,7 +14,7 @@ function UserAccount() {
 
   return (
     <div className='flex justify-between'>
-      <div className='ml-4 px-4 flex items-center md:ml-6 border-l border-greeny'>
+      <div className='ml-4 px-4 flex items-center md:ml-6 border-l border-gray-800'>
         {/* Profile dropdown */}
         <Menu as='div' className='relative'>
           <div>

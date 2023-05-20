@@ -37,7 +37,7 @@ function ServiceDetail({ service }: { service: IService }) {
 
   return (
     <>
-      <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
+      <div className='flex flex-row gap-2 rounded p-4 border border-greeny'>
         <div className='flex flex-col items-top justify-between gap-4 w-full'>
           <div className='flex flex-col justify-start items-start gap-4'>
             <div className='flex items-center justify-start w-full relative'>
@@ -103,7 +103,7 @@ function ServiceDetail({ service }: { service: IService }) {
               <>
                 {!userProposal && (
                   <Link
-                    className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg'
+                    className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded'
                     href={`/services/${service.id}/proposal`}>
                     Create proposal
                   </Link>
@@ -173,9 +173,7 @@ function ServiceDetail({ service }: { service: IService }) {
               </div>
             </>
           ) : (
-            <div
-              className='flex p-4 text-sm text-gray-700 bg-gray-100 rounded-lg mt-4'
-              role='alert'>
+            <div className='flex p-4 text-sm text-gray-700 bg-gray-100 rounded mt-4' role='alert'>
               <svg
                 className='flex-shrink-0 inline w-5 h-5 mr-3'
                 fill='currentColor'

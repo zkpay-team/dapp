@@ -7,7 +7,7 @@ import {
 import { StartRailgunEngineResponse, NetworkName } from '@railgun-community/shared-models';
 import localforage from 'localforage';
 import LevelDB from 'level-js';
-import { ETH_PROVIDERS_JSON } from './networks';
+import { ETH_PROVIDERS_JSON_GOERLI, ETH_PROVIDERS_JSON_POLYGON } from './networks';
 
 type Optional<T> = T | undefined;
 
@@ -16,7 +16,10 @@ const DB_PATH = './myDatabaseName';
 export const loadProviders = async () => {
   const shouldDebug = true;
 
-  return await loadProvider(ETH_PROVIDERS_JSON, NetworkName.EthereumGoerli, shouldDebug);
+  await loadProvider(ETH_PROVIDERS_JSON_GOERLI, NetworkName.EthereumGoerli, shouldDebug);
+  await loadProvider(ETH_PROVIDERS_JSON_POLYGON, NetworkName.Polygon, shouldDebug);
+
+  return;
 };
 
 const artifactStore = new ArtifactStore(

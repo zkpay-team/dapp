@@ -16,7 +16,7 @@ import { useRouter } from 'next/router';
 import { ChatMessageStatus, XmtpChatMessage } from '../utils/types';
 
 function Dashboard() {
-  const { user } = useContext(TalentLayerContext);
+  const { user, account } = useContext(TalentLayerContext);
   const { data: signer } = useSigner({
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
@@ -30,7 +30,7 @@ function Dashboard() {
 
   const { sendMessage } = useSendMessage(
     (selectedConversationPeerAddress as string) ? selectedConversationPeerAddress : '',
-    user?.id,
+    account?.address,
   );
   const peerUser = useUserByAddress(selectedConversationPeerAddress);
 
@@ -51,10 +51,10 @@ function Dashboard() {
   };
 
   const sendNewMessage = async () => {
-    if (user && user.address && messageContent && providerState && setProviderState) {
+    if (account?.address && messageContent && providerState && setProviderState) {
       setSendingPending(true);
       const sentMessage: XmtpChatMessage = {
-        from: user.address,
+        from: account.address,
         to: selectedConversationPeerAddress,
         messageContent,
         timestamp: new Date(),
@@ -114,13 +114,15 @@ function Dashboard() {
     }
   };
 
-  if (!user) {
+  console.log('Messaging', { account });
+
+  if (!account?.isConnected) {
     return <Steps targetTitle={'Access messaging'} />;
   }
 
   return (
     <div className='mx-auto text-gray-900 sm:px-4 lg:px-0'>
-      {!providerState?.client && user && (
+      {!providerState?.client && account && (
         <button
           type='submit'
           className='bg-greeny text-midnight font-bold py-2 px-4 rounded'
@@ -134,23 +136,23 @@ function Dashboard() {
           <div className='flex flex-row'>
             <div
               style={{ overflowAnchor: 'revert' }}
-              className='basis-1/4 h-[calc(100vh-128px)] flex-no-wrap flex-none overflow-y-auto border-r'>
+              className='basis-1/4 h-[calc(100vh-192px)] sm:h-[calc(100vh-128px)] flex-no-wrap flex-none overflow-y-auto border-r'>
               <ConversationList
                 conversationMessages={providerState.conversationMessages}
                 selectedConversationPeerAddress={selectedConversationPeerAddress}
                 conversationsLoading={providerState.loadingConversations}
               />
             </div>
-            {providerState?.client && selectedConversationPeerAddress && user?.id && peerUser?.id && (
-              <div className='basis-3/4 w-full pl-5 flex flex-col justify-between h-[calc(100vh-128px)]'>
+            {providerState?.client && selectedConversationPeerAddress && (
+              <div className='basis-3/4 w-full pl-5 flex flex-col justify-between h-[calc(100vh-192px)] sm:h-[calc(100vh-128px)]'>
                 <div className='overflow-y-auto'>
                   <MessageList
                     conversationMessages={
                       providerState.conversationMessages.get(selectedConversationPeerAddress) ?? []
                     }
                     selectedConversationPeerAddress={selectedConversationPeerAddress}
-                    userId={user?.id}
-                    peerUserId={peerUser?.id as string}
+                    userId={account?.address as string}
+                    peerUserId={selectedConversationPeerAddress}
                     messagesLoading={providerState.loadingMessages}
                     sendingPending={sendingPending}
                     setMessageSendingErrorMsg={setMessageSendingErrorMsg}
@@ -165,7 +167,7 @@ function Dashboard() {
                     peerUserExistsOnXMTP={
                       messageSendingErrorMsg !== NON_EXISTING_XMTP_USER_ERROR_MESSAGE
                     }
-                    peerUserExistsOnTalentLayer={!!peerUser}
+                    peerUserExistsOnTalentLayer={!!selectedConversationPeerAddress}
                   />
                 )}
               </div>
@@ -176,9 +178,9 @@ function Dashboard() {
               <p className={'text-red-400 ml-1'}>{messageSendingErrorMsg}</p>
             </div>
           )}
-          {selectedConversationPeerAddress && !peerUser && (
+          {selectedConversationPeerAddress && !selectedConversationPeerAddress && (
             <div className={'text-center'}>
-              <p className={'text-red-400 ml-1'}>User is not registered with TalentLayer</p>
+              <p className={'text-red-400 ml-1'}>User is not registered</p>
             </div>
           )}
         </div>

@@ -10,7 +10,7 @@ interface Token {
   address: string;
 }
 
-const tokens: Token[] = [
+export const tokens: Token[] = [
   {
     id: 1,
     name: 'Dai',
@@ -40,7 +40,7 @@ const tokens: Token[] = [
 
 function TokenList({ balances }: { balances: Balances }) {
   return (
-    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
+    <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4'>
       {tokens.map(token => (
         <div
           key={token.id}

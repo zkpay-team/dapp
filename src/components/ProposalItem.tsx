@@ -19,7 +19,7 @@ function ProposalItem({ proposal }: { proposal: IProposal }) {
   const isBuyer = user?.id === proposal.service.buyer.id;
 
   return (
-    <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
+    <div className='flex flex-row gap-2 rounded p-4 border border-greeny'>
       <div className='flex flex-col items-top justify-between gap-4 w-full'>
         <div className='flex flex-col justify-start items-start gap-4'>
           <div className='flex items-center justify-start w-full  relative'>
@@ -74,7 +74,7 @@ function ProposalItem({ proposal }: { proposal: IProposal }) {
           service.status === ServiceStatusEnum.Opened && (
             <div className='flex flex-row gap-4 items-center border-t border-gray-100 pt-4'>
               <Link
-                className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg'
+                className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded'
                 href={`/services/${service.id}/proposal`}>
                 Edit proposal
               </Link>

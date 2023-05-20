@@ -68,7 +68,7 @@ export function SkillsInput({
         <div className='relative'>
           <div className='relative mb-2'>
             <Combobox.Input
-              className='mt-1 block w-full rounded border-gray-300 focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+              className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
               onChange={event => debounceSetQuery(event.target.value)}
             />
           </div>

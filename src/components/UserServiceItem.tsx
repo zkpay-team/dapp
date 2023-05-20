@@ -9,7 +9,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
   const isBuyer = user?.id === service.buyer.id;
 
   return (
-    <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
+    <div className='flex flex-row gap-2 rounded p-4 border border-greeny'>
       <div className='flex flex-col items-top justify-between gap-4 w-full'>
         <div className='flex flex-col justify-start items-start gap-4 relative'>
           <div className='flex items-center justify-start'>
@@ -57,7 +57,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
             </p>
           )}
           <Link
-            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg relative'
+            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded relative'
             href={`/services/${service.id}`}>
             Show details
             {isBuyer && service.status == ServiceStatusEnum.Opened && (

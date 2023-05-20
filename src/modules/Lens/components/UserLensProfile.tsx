@@ -9,7 +9,7 @@ function UserLensProfile({ lensUser }: IProps) {
   return (
     <>
       {lensUser?.id && (
-        <div className='card bg-white border border-greeny rounded-xl'>
+        <div className='card bg-white border border-greeny rounded'>
           {lensUser?.picture.original.url && (
             <Image
               width={200}
@@ -31,7 +31,7 @@ function UserLensProfile({ lensUser }: IProps) {
             <a
               href={`https://lenster.xyz/u/${lensUser.handle}`}
               target='_blank'
-              className='bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded'>
+              className='bg-greeny hover:bg-green-600 text-white font-bold py-2 px-4 rounded'>
               Follow me
             </a>
           </div>
