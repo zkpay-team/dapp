@@ -18,6 +18,8 @@ import { useEffect } from 'react';
 import { RailgunProvider } from '../context/railgun';
 import SEO from '../../next-seo.config';
 
+import Script from 'next/script';
+
 const chains: Chain[] = [customChains.polygonMumbai];
 
 // Wagmi client
@@ -44,6 +46,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
+      <Script src='snarkjs.min.js' strategy='beforeInteractive' />
       <GoogleAnalytics trackPageViews />
       <DefaultSeo {...SEO} />
       <ToastContainer position='bottom-right' />
