@@ -4,11 +4,10 @@ import {
   loadProvider,
   setLoggers,
 } from '@railgun-community/quickstart';
-import { StartRailgunEngineResponse } from '@railgun-community/shared-models';
+import { StartRailgunEngineResponse, NetworkName } from '@railgun-community/shared-models';
 import localforage from 'localforage';
 import LevelDB from 'level-js';
 import { ETH_PROVIDERS_JSON } from './networks';
-import { NetworkName } from '@railgun-community/shared-models';
 
 type Optional<T> = T | undefined;
 
