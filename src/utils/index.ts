@@ -16,3 +16,14 @@ export const isValidHttpsUrl = (path: string) => {
 
   return url.protocol === 'https:';
 };
+
+export const shortenString = (str: string, startLength: number, endLength: number) => {
+  if (str.length <= startLength + endLength) {
+    return str;
+  }
+
+  const start = str.slice(0, startLength);
+  const end = str.slice(-endLength);
+
+  return start + '...' + end;
+};
