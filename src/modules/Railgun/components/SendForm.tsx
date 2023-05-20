@@ -100,8 +100,8 @@ function SendForm() {
                   {values.recipients.length > 0 &&
                     values.recipients.map((recipient, index) => (
                       <div className='row' key={index}>
-                        <div className='flex'>
-                          <label className='block mr-4'>
+                        <div className='flex w-full'>
+                          <label className='block flex-1 mr-4'>
                             <span className='text-gray-200'>To</span>
                             <Field
                               type='text'
@@ -111,7 +111,7 @@ function SendForm() {
                               placeholder=''
                             />
                           </label>
-                          <label className='block'>
+                          <label className='block flex-1'>
                             <span className='text-gray-200'>Amount</span>
                             <Field
                               type='number'

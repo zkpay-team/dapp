@@ -5,17 +5,17 @@ import useUserByAddress from '../../../hooks/useUserByAddress';
 import { buildConversationId } from '../utils/messaging';
 import { DecodedMessage } from '@xmtp/xmtp-js';
 
-const useSendMessage = (peerAddress: string, senderId: string | undefined) => {
+const useSendMessage = (peerAddress: string, senderAddress: string | undefined) => {
   const { providerState } = useContext(XmtpContext);
   const peerUser = useUserByAddress(peerAddress);
   const { client } = providerState || {};
 
   const sendMessage = async (message: string): Promise<DecodedMessage> => {
-    if (!client || !peerAddress || !peerUser?.id || !senderId) {
+    if (!client || !peerAddress || !peerUser?.id || !senderAddress) {
       throw new Error('Message sending failed');
     }
 
-    const conversationId = buildConversationId(senderId, peerUser.id);
+    const conversationId = buildConversationId(senderAddress, peerAddress);
 
     //Could add a context to define the linked job
     const context: InvitationContext = {

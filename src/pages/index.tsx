@@ -3,6 +3,7 @@ import RailgunAddress from '../modules/Railgun/components/RailgunAddress';
 import TokenList from '../modules/Railgun/components/TokenList';
 import RailgunContext from '../modules/Railgun/context/railgun';
 import Image from 'next/image';
+import ContactButton from '../modules/Messaging/components/ContactButton';
 
 function Home() {
   const { wallet, createWallet, balances } = useContext(RailgunContext);
