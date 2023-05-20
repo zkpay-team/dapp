@@ -1,9 +1,9 @@
 import { createContext, ReactNode, useEffect, useMemo } from 'react';
 import { useAccount } from 'wagmi';
-import { IAccount } from '../types';
 
-import { initializeRailgun } from '../modules/Railgun/services/setupRailgunEngine';
 import { getProver, Groth16 } from '@railgun-community/quickstart';
+import { IAccount } from '../../../types';
+import { initializeRailgun } from '../services/setupRailgunEngine';
 
 declare global {
   interface Window {
