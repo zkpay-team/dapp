@@ -34,14 +34,22 @@ function Groups() {
         {groups.map(group => (
           <div
             key={group.id}
-            className='border border-gray-200 shadow rounded p-4 flex items-center bg-endnight'
-            onClick={() => {
-              router.push(`/groups/${group.id}`);
-            }}>
-            <div>
+            className='border border-gray-200 shadow rounded  flex items-center bg-endnight'>
+            <div
+              className='flex-1 p-4'
+              onClick={() => {
+                router.push(`/groups/${group.id}`);
+              }}>
               <p className='font-bold'>{group.name}</p>
-              <p>{group.users.length} users</p>
+              <p className='text-gray-400'>{group.users.length} users</p>
             </div>
+            <button
+              className='ml-auto bg-greeny  text-midnight py-2 px-4 rounded mr-4'
+              onClick={() => {
+                router.push(`/send?group=${group.id}`);
+              }}>
+              Pay
+            </button>
           </div>
         ))}
       </div>

@@ -7,6 +7,7 @@ import { useContext } from 'react';
 import RailgunContext from '../context/railgun';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
+import { Group } from './GroupForm';
 
 interface IFormValues {
   token: string;
@@ -20,6 +21,27 @@ interface Recipient {
 
 // @dev to test it: ?token=0xdc31ee1784292379fbb2964b3b9c4124d8f89c60&amount[0]=10&to[0]=0zk1qyy6yz7c2h5cxyyrzgxvql9clj2gu6u6f7dszt5trhhn0xm5zug7frv7j6fe3z53laydg6xztk8z5w2y37wmy3u9y64q7fpq53d32cn90tmlra5kveqqjeluam2&amount[1]=30&to[1]=0zk123456789123456789
 const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
+  if (query.group) {
+    const groups = localStorage.getItem('groups')
+      ? JSON.parse(localStorage.getItem('groups') as string)
+      : [];
+
+    const group: Group = groups.find((group: Group) => group.id === query.group);
+
+    const recipients = [];
+    for (let i = group.users.length - 1; i >= 0; i--) {
+      recipients.push({
+        to: group.users[i].to,
+        amount: 0,
+      });
+    }
+
+    return {
+      token: (query['token'] as string) || '',
+      recipients: recipients,
+    };
+  }
+
   return {
     token: (query['token'] as string) || '',
     recipients: [

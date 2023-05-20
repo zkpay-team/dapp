@@ -31,7 +31,6 @@ const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
 
     const group = groups.find((group: Group) => group.id === query.id);
 
-    console.log('getInitialValuesFromUrl', { groups, group, query });
     return group;
   }
 
@@ -61,8 +60,6 @@ function GroupForm() {
   }
 
   const initialValues: IFormValues = getInitialValuesFromUrl(query);
-
-  console.log('initialValues', { initialValues });
 
   const validationSchema = Yup.object({
     name: Yup.string().required('Please select a name'),
