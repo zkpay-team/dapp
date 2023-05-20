@@ -2,6 +2,7 @@ import { useContext } from 'react';
 import TalentLayerContext from '../context/talentLayer';
 import ConnectBlock from './ConnectBlock';
 import Step from './Step';
+import TalentLayerIdForm from './Form/TalentLayerIdForm';
 
 function Steps({ targetTitle }: { targetTitle?: string }) {
   const { account, user } = useContext(TalentLayerContext);
@@ -9,6 +10,8 @@ function Steps({ targetTitle }: { targetTitle?: string }) {
   if (account?.isConnected) {
     return null;
   }
+
+  console.log('Steps', account?.address, user);
 
   return (
     <>
@@ -36,6 +39,7 @@ function Steps({ targetTitle }: { targetTitle?: string }) {
       </nav>
 
       {!account?.isConnected && <ConnectBlock />}
+      {account?.isConnected && !user && <TalentLayerIdForm />}
     </>
   );
 }

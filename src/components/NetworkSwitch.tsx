@@ -57,6 +57,13 @@ function NetworkSwitch() {
                 chainName={chainIdToName(parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string))}
               />
             </Menu.Item>
+            <Menu.Item key={'137'}>
+              <NetworkLink
+                key={'137'}
+                chaindId={parseInt('137')}
+                chainName={chainIdToName(parseInt('137'))}
+              />
+            </Menu.Item>
           </div>
         </Menu.Items>
       </Transition>
