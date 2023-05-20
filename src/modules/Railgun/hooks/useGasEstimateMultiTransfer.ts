@@ -1,5 +1,5 @@
 import { useState, useCallback } from 'react';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { gasEstimateForUnprovenTransfer } from '@railgun-community/quickstart';
 import {
   NetworkName,
@@ -8,22 +8,28 @@ import {
   TransactionGasDetailsSerialized,
   EVMGasType,
 } from '@railgun-community/shared-models';
+import { useSigner } from 'wagmi';
+import { erc20AmountRecipients } from '../context/railgun';
 
 type UseGasEstimateMultiTransferParams = {
-  railgunAddress: string;
+  railgunAddresses: string[];
   railgunWalletID: string;
   selectedTokenFeeAddress: string;
   selectedRelayer: { feePerUnitGas: string };
 };
 
 export function useGasEstimateMultiTransfer({
-  railgunAddress,
+  railgunAddresses,
   railgunWalletID,
   selectedTokenFeeAddress,
   selectedRelayer,
 }: UseGasEstimateMultiTransferParams) {
   const [gasEstimate, setGasEstimate] = useState<BigNumber | null>(null);
   const [estimateError, setEstimateError] = useState<string | null>(null);
+
+  const { data: signer } = useSigner({
+    chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
+  });
 
   const fetchGasEstimate = useCallback(async () => {
     const wallet: string | null = localStorage.getItem('wallet');
@@ -43,20 +49,17 @@ export function useGasEstimateMultiTransfer({
     const encryptionKey: string = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
 
     const memoText = 'Getting the salariess! 🍝😋';
-
-    const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
-      {
-        tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-        amountString: '0x10', // hexadecimal amount decimal meaning 16
-        recipientAddress: railgunAddress,
-      },
-    ];
+    const feeData = await signer?.getFeeData();
+    console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
+    const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
+    console.log('gasPrice', gasPrice);
 
     const originalGasDetailsSerialized: TransactionGasDetailsSerialized = {
       evmGasType: EVMGasType.Type2,
       gasEstimateString: '0x00',
-      maxFeePerGasString: '0x100000',
-      maxPriorityFeePerGasString: '0x010000',
+      maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
+      maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+      // gasPriceString: gasPrice,
     };
 
     const feeTokenDetails: FeeTokenDetails = {
@@ -64,8 +67,8 @@ export function useGasEstimateMultiTransfer({
       feePerUnitGas: selectedRelayer.feePerUnitGas,
     };
 
-    const sendWithPublicWallet = false;
-
+    const sendWithPublicWallet = true;
+    console.log('erc20AmountRecipients showing before estimating', erc20AmountRecipients);
     const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
       NetworkName.EthereumGoerli,
       railgunWalletID,
@@ -84,7 +87,7 @@ export function useGasEstimateMultiTransfer({
     }
 
     setGasEstimate(BigNumber.from(gasEstimateString));
-  }, [railgunAddress, railgunWalletID, selectedTokenFeeAddress, selectedRelayer]);
+  }, [railgunAddresses, railgunWalletID, selectedTokenFeeAddress, selectedRelayer, signer]);
 
   return { gasEstimate, estimateError, fetchGasEstimate };
 }

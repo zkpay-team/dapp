@@ -46,7 +46,7 @@ export function useGenerateTransferProof({
     // const relayerFeeTokenAmountRecipient = '0x0000000000000000000000000000000000000000';
 
     const showSenderAddressToRecipient = true;
-
+    console.log('tokenAmountRecipients showing before generating', tokenAmountRecipients);
     const { error } = await generateTransferProof(
       NetworkName.EthereumGoerli,
       railgunWalletID,
