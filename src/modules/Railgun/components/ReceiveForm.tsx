@@ -29,8 +29,7 @@ function ReceiveForm() {
   });
 
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
-    console.log(values);
-    const text = `https://zkpay.herokuapp.com/send?to=${wallet.railgunWalletInfo?.railgunAddress}&token=${values.token}&amount=${values.amount}`;
+    const text = `https://zkpay.herokuapp.com/send?token=${values.token}&to[0]=${wallet.railgunWalletInfo?.railgunAddress}&amount[0]=${values.amount}`;
     navigator.clipboard.writeText(text);
     toast('Share link copied', {
       position: 'bottom-right',

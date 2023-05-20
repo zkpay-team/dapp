@@ -9,7 +9,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
   const isBuyer = user?.id === service.buyer.id;
 
   return (
-    <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
+    <div className='flex flex-row gap-2 rounded p-4 border border-greeny'>
       <div className='flex flex-col items-top justify-between gap-4 w-full'>
         <div className='flex flex-col justify-start items-start gap-4 relative'>
           <div className='flex items-center justify-start'>

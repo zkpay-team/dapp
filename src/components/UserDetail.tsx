@@ -18,7 +18,7 @@ function UserDetail({ user }: { user: IUser }) {
   }
 
   return (
-    <div className='flex flex-col rounded-xl p-4 border border-greeny'>
+    <div className='flex flex-col rounded p-4 border border-greeny'>
       <div className='flex items-top justify-between w-full'>
         <div className='flex flex-col justify-start items-start gap-4'>
           <div className='flex items-center justify-start mb-4'>

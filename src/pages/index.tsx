@@ -3,6 +3,7 @@ import RailgunAddress from '../modules/Railgun/components/RailgunAddress';
 import TokenList from '../modules/Railgun/components/TokenList';
 import RailgunContext from '../modules/Railgun/context/railgun';
 import Image from 'next/image';
+import ContactButton from '../modules/Messaging/components/ContactButton';
 
 function Home() {
   const { wallet, createWallet, balances } = useContext(RailgunContext);
@@ -42,6 +43,11 @@ function Home() {
       <div className='mt-4'>
         <TokenList balances={balances} />
       </div>
+
+      <ContactButton
+        userAddress={'0x0bBeb6e6cAF6cf45310B0FB0Ce89F30caf45b844'}
+        userHandle={'Toto'}
+      />
     </div>
   );
 }

@@ -19,6 +19,16 @@ function UserSubMenu() {
         )}
       </Menu.Item>
 
+      <Menu.Item key='recover'>
+        {({ active }) => (
+          <Link
+            href='/recover'
+            className={`block px-4 py-2 text-sm text-gray-700' ${active ? 'bg-gray-100' : ''}`}>
+            Recover my wallet
+          </Link>
+        )}
+      </Menu.Item>
+
       <Menu.Item key='Log out'>
         {({ active }) => (
           <button
