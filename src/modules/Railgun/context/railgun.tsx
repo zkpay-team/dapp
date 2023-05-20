@@ -12,6 +12,7 @@ import { initializeRailgun, loadProviders } from '../utils/setup';
 import { LoadRailgunWalletResponse } from '@railgun-community/shared-models';
 import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
 import { NetworkName } from '@railgun-community/shared-models';
+import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
 
 declare global {
   interface Window {
@@ -41,7 +42,30 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
   const [isProviderLoaded, setProviderLoaded] = useState<boolean>(false);
   const [wallet, setWallet] = useState<LoadRailgunWalletResponse>();
 
+  useEffect(() => {
+    console.log('wallet?.railgunWalletInfo?.id ', wallet?.railgunWalletInfo?.id);
+  }, [wallet?.railgunWalletInfo?.id, wallet, wallet?.railgunWalletInfo]);
+
   console.log('RailgunProvider', { isProviderLoaded });
+
+  const { gasEstimate, error } = useGasEstimateMultiTransfer({
+    railgunAddress:
+      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel' ||
+      '',
+    railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+    selectedTokenFeeAddress: '0x00000000000000000000000',
+    selectedRelayer: {
+      feePerUnitGas: '0',
+    },
+  });
+
+  useEffect(() => {
+    console.log('logging gasEstimate returned from hook: ', { gasEstimate });
+  }, [gasEstimate]);
+
+  useEffect(() => {
+    console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { error });
+  }, [error]);
 
   useEffect(() => {
     const fn = async () => {
@@ -84,6 +108,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
           false,
         );
         console.log('loadWalletByID');
+        console.log({ railgunWallet });
         setWallet(railgunWallet);
       }
     };
@@ -108,6 +133,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
       mnemonic,
       creationBlockNumberMap,
     );
+    console.log('setting the wallet');
     console.log({ railgunWallet });
     setWallet(railgunWallet);
     localStorage.setItem(

@@ -26,6 +26,9 @@ export function useGasEstimateMultiTransfer({
   const [gasEstimate, setGasEstimate] = useState<BigNumber | null>(null);
   const [error, setError] = useState<string | null>(null);
 
+  console.log('railgunAddress', railgunAddress);
+  console.log('railgunWalletID', railgunWalletID);
+
   useEffect(() => {
     const fetchGasEstimate = async () => {
       const encryptionKey = '0101010101010101010101010101010101010101010101010101010101010101';
@@ -60,7 +63,7 @@ export function useGasEstimateMultiTransfer({
       };
 
       // Whether to use a Relayer or self-signing wallet. True for self-signing, false for Relayer.
-      const sendWithPublicWallet = false;
+      const sendWithPublicWallet = true;
 
       const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
         NetworkName.EthereumGoerli,
