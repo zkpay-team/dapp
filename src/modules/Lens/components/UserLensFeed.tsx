@@ -20,7 +20,7 @@ function UserLensFeed({ lensUser }: IProps) {
       {lensFeed.map((item: ILensPublication, index: number) => (
         <a key={index} href={`https://lenster.xyz/posts/${item.id}`} target='_blank' className=''>
           <div
-            className={`card bg-white border border-gray-200 rounded-xl ml-4 ${
+            className={`card bg-white border border-greeny rounded-xl ml-4 ${
               index !== 0 ? 'mt-4' : ''
             }`}>
             <div className='flex'>

@@ -8,7 +8,7 @@ export default function Document() {
           name='viewport'
           content='width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no'></meta>
       </Head>
-      <body>
+      <body className='text-white bg-midnight'>
         <Main />
         <NextScript />
       </body>

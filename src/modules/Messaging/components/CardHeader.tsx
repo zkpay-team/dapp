@@ -11,7 +11,7 @@ const CardHeader = ({ peerAddress }: ICardHeaderProps) => {
         {peerAddress && (
           <p>
             To:
-            <span className='border-2 ml-2 pl-2 pr-2 border-gray-200 rounded-3xl text-xs'>
+            <span className='border-2 ml-2 pl-2 pr-2 border-greeny rounded-3xl text-xs'>
               {peerAddress}
             </span>
           </p>

@@ -9,7 +9,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
   const isBuyer = user?.id === service.buyer.id;
 
   return (
-    <div className='flex flex-row gap-2 rounded-xl p-4 border border-gray-200'>
+    <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
       <div className='flex flex-col items-top justify-between gap-4 w-full'>
         <div className='flex flex-col justify-start items-start gap-4 relative'>
           <div className='flex items-center justify-start'>
@@ -61,7 +61,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
             href={`/services/${service.id}`}>
             Show details
             {isBuyer && service.status == ServiceStatusEnum.Opened && (
-              <div className='inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-xs font-bold text-white bg-zinc-900 rounded-full border-2 border-white'>
+              <div className='inline-flex absolute -top-2 -right-2 justify-center items-center w-6 h-6 text-xs font-bold text-white bg-midnight rounded-full border-2 border-white'>
                 {service.proposals.length}
               </div>
             )}

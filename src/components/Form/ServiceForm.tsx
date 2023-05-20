@@ -158,14 +158,14 @@ function ServiceForm() {
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
       {({ isSubmitting, setFieldValue }) => (
         <Form>
-          <div className='grid grid-cols-1 gap-6 border border-gray-200 rounded-md p-8'>
+          <div className='grid grid-cols-1 gap-6 border border-greeny rounded p-8'>
             <label className='block'>
               <span className='text-gray-700'>Title</span>
               <Field
                 type='text'
                 id='title'
                 name='title'
-                className='mt-1 mb-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
               <span className='text-red-500'>
@@ -179,7 +179,7 @@ function ServiceForm() {
                 as='textarea'
                 id='about'
                 name='about'
-                className='mt-1 mb-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
               <span className='text-red-500'>
@@ -202,7 +202,7 @@ function ServiceForm() {
                   type='number'
                   id='rateAmount'
                   name='rateAmount'
-                  className='mt-1 mb-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 mb-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                   placeholder=''
                 />
                 <span className='text-red-500 mt-2'>
@@ -215,7 +215,7 @@ function ServiceForm() {
                   component='select'
                   id='rateToken'
                   name='rateToken'
-                  className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                   placeholder=''
                   onChange={(e: { target: { value: string } }) => {
                     const token = allowedTokenList.find(token => token.address === e.target.value);

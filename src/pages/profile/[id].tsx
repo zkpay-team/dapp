@@ -17,12 +17,12 @@ function Profile() {
   }
 
   return (
-    <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
+    <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
       <Back />
       {user && (
         <>
           <p className='text-5xl font-medium tracking-wider mb-8'>
-            Profile <span className='text-zinc-600'>{user.handle}</span>
+            Profile <span className='text-gray-100'>{user.handle}</span>
           </p>
           <div>
             <div className='mb-6'>

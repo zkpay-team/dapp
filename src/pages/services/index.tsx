@@ -19,18 +19,18 @@ function Services() {
   );
 
   return (
-    <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
+    <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
       <p className='text-5xl font-medium tracking-wider mb-8'>
-        All <span className='text-zinc-600'>Jobs </span>
+        All <span className='text-gray-100'>Jobs </span>
       </p>
       {searchQuery && services.length > 0 && (
         <p className='text-xl font-medium tracking-wider mb-8'>
-          Search results for <span className='text-zinc-600'>{searchQuery}</span>
+          Search results for <span className='text-gray-100'>{searchQuery}</span>
         </p>
       )}
       {searchQuery && services.length === 0 && (
         <p className='text-xl font-medium tracking-wider mb-8'>
-          No search results for <span className='text-zinc-600'>{searchQuery}</span>
+          No search results for <span className='text-gray-100'>{searchQuery}</span>
         </p>
       )}
 
@@ -49,7 +49,7 @@ function Services() {
           <button
             type='submit'
             className={`px-5 py-2 mt-5 content-center border border-zinc-600 rounded-full text-zinc-600 
-              hover:text-white hover:bg-zinc-900
+              hover:text-white hover:bg-midnight
             `}
             disabled={!hasMoreData}
             onClick={() => loadMore()}>

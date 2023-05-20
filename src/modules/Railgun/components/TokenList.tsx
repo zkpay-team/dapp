@@ -42,7 +42,9 @@ function TokenList({ balances }: { balances: Balances }) {
   return (
     <div className='grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4'>
       {tokens.map(token => (
-        <div key={token.id} className='bg-white shadow rounded p-4 flex items-center'>
+        <div
+          key={token.id}
+          className='border border-gray-200 shadow rounded p-4 flex items-center bg-endnight'>
           <img src={token.logo} alt={token.address} className='w-8 h-8 rounded-full mr-4' />
           <div>
             <p className='font-bold'>{token.name}</p>

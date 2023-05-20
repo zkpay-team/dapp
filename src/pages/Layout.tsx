@@ -53,7 +53,7 @@ function Layout({ children, className }: ContainerProps) {
                 leave='transition ease-in-out duration-300 transform'
                 leaveFrom='translate-x-0'
                 leaveTo='-translate-x-full'>
-                <Dialog.Panel className='relative flex w-full max-w-xs flex-1 flex-col bg-zinc-900 pt-5 pb-4'>
+                <Dialog.Panel className='relative flex w-full max-w-xs flex-1 flex-col bg-midnight pt-5 pb-4'>
                   <Transition.Child
                     as={Fragment}
                     enter='ease-in-out duration-300'
@@ -87,8 +87,8 @@ function Layout({ children, className }: ContainerProps) {
           </Dialog>
         </Transition.Root>
 
-        <div className='hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col'>
-          <div className='flex flex-grow flex-col overflow-y-auto bg-zinc-900 pt-5'>
+        <div className='hidden md:fixed md:inset-y-0 md:flex md:w-64 md:flex-col border-r border-greeny'>
+          <div className='flex flex-grow flex-col overflow-y-auto bg-midnight pt-5'>
             <div className='flex flex-shrink-0 items-center px-4'>
               <Logo />
             </div>
@@ -100,9 +100,11 @@ function Layout({ children, className }: ContainerProps) {
         </div>
 
         <div className='flex flex-1 flex-col md:pl-64'>
-          <div className='sticky top-0 z-10 flex h-16 flex-shrink-0 bg-white border-b border-gray-200'>
+          <div className='sticky top-0 z-10 flex h-16 flex-shrink-0 bg-midnight border-b border-greeny'>
             <div className='flex flex-1 items-center pl-6'>
-              <Logo theme='dark' />
+              <div className='sm:hidden'>
+                <Logo />
+              </div>
             </div>
             <NetworkSwitch />
             <UserAccount />

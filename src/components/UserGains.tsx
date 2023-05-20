@@ -21,9 +21,7 @@ function UserGains({ user }: IProps) {
       <div className='grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4'>
         {userGains.map((gain, i) => {
           return (
-            <div
-              className='flex items-center p-4 bg-white rounded-xl border border-gray-200'
-              key={i}>
+            <div className='flex items-center p-4 bg-white rounded-xl border border-greeny' key={i}>
               <div className='flex flex-shrink-0 items-center justify-center bg-green-200 h-16 w-16 rounded'>
                 <svg
                   className='w-6 h-6 fill-current text-green-700'

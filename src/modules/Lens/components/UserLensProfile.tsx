@@ -9,7 +9,7 @@ function UserLensProfile({ lensUser }: IProps) {
   return (
     <>
       {lensUser?.id && (
-        <div className='card bg-white border border-gray-200 rounded-xl'>
+        <div className='card bg-white border border-greeny rounded-xl'>
           {lensUser?.picture.original.url && (
             <Image
               width={200}
