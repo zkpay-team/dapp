@@ -34,3 +34,15 @@ body {
     font-family: 'Space Grotesk';
 }
   
+body .Toastify__toast-container--bottom-right{
+    bottom: 64px;
+}
+
+body .Toastify__toast-theme--dark{
+background: #11112a
+}
+
+body .Toastify__progress-bar-theme--dark{
+    background: #11FEB7;
+    height: 2px;
+}
