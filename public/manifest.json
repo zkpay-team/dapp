@@ -1,6 +1,6 @@
 {
-  "short_name": "TL Workshop",
-  "name": "Talent Layer Workshop",
+  "short_name": "ZKPay",
+  "name": "ZKPay",
   "icons": [
     {
       "src": "favicon.ico",
@@ -20,6 +20,6 @@
   ],
   "start_url": ".",
   "display": "standalone",
-  "theme_color": "#000000",
-  "background_color": "#ffffff"
+  "theme_color": "#11112a",
+  "background_color": "#11FEB7"
 }
