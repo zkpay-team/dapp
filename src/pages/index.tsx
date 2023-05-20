@@ -3,10 +3,11 @@ import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import RailgunContext from '../modules/Railgun/context/railgun';
 import { shortenString } from '../utils';
+import TokenList from '../modules/Railgun/components/TokenList';
 
 function Home() {
-  const { wallet, createWallet } = useContext(RailgunContext);
-  console.log({ wallet, createWallet });
+  const { wallet, createWallet, balances } = useContext(RailgunContext);
+  console.log({ wallet, createWallet, balances });
 
   if (!wallet?.railgunWalletInfo) {
     return (
@@ -46,6 +47,10 @@ function Home() {
         <DocumentDuplicate />
         <span>{shortenString(wallet.railgunWalletInfo.railgunAddress, 8, 5)}</span>
       </a>
+
+      <div className='mt-4'>
+        <TokenList balances={balances} />
+      </div>
     </div>
   );
 }
