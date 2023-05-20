@@ -18,12 +18,14 @@ const GroupsComponent = () => {
   }, [groups]);
 
   const handleGroupChange = (index: number, name: string) => {
-    setGroups((prevGroups) => {
-      const updatedGroups = prevGroups.map((group) => ({
-        ...group, 
-        selected: false
+    setGroups(prevGroups => {
+      const updatedGroups = prevGroups.map(group => ({
+        ...group,
+        selected: false,
       }));
-      console.log(`TEST groupChange index ${index} prev length ${updatedGroups.length} newName ${name}`)
+      console.log(
+        `TEST groupChange index ${index} prev length ${updatedGroups.length} newName ${name}`,
+      );
       updatedGroups[index].name = name;
       updatedGroups[index].selected = true;
       return updatedGroups;
@@ -31,21 +33,27 @@ const GroupsComponent = () => {
   };
 
   const handleAddGroup = () => {
-    setGroups((prevGroups) => {
+    setGroups(prevGroups => {
       console.log(`TEST Add Group called prev length ${prevGroups.length}`);
-      const updatedGroups = prevGroups.map((group) => ({
-        ...group, 
-        selected: false
+      const updatedGroups = prevGroups.map(group => ({
+        ...group,
+        selected: false,
       }));
-      return [
-      ...updatedGroups,
-      { name: '', addresses: [], selected: true }
-    ]});
+      return [...updatedGroups, { name: '', addresses: [], selected: true }];
+    });
   };
 
-  const handleAddressChange = (groupIndex: number, addressIndex: number, address: string, nickname: string, amount: number) => {
-    setGroups((prevAddresses) => {
-      console.log(`TEST change address called  groupIndex ${groupIndex} address Index ${addressIndex} address ${address} nickname ${nickname} amount ${amount}`)
+  const handleAddressChange = (
+    groupIndex: number,
+    addressIndex: number,
+    address: string,
+    nickname: string,
+    amount: number,
+  ) => {
+    setGroups(prevAddresses => {
+      console.log(
+        `TEST change address called  groupIndex ${groupIndex} address Index ${addressIndex} address ${address} nickname ${nickname} amount ${amount}`,
+      );
       const updatedGroups = [...prevAddresses];
       updatedGroups[groupIndex].addresses[addressIndex] = { address, nickname, amount };
       return updatedGroups;
@@ -53,8 +61,10 @@ const GroupsComponent = () => {
   };
 
   const handleAddAddress = (groupIndex: number) => {
-    setGroups((prevAddresses) => {
-      console.log(`TEST Add Address called for group ${groupIndex} prev length ${prevAddresses.length}`);
+    setGroups(prevAddresses => {
+      console.log(
+        `TEST Add Address called for group ${groupIndex} prev length ${prevAddresses.length}`,
+      );
       const updatedGroups = [...prevAddresses];
       updatedGroups[groupIndex].addresses.push({ address: '', nickname: '', amount: 0 });
       return updatedGroups;
@@ -62,14 +72,20 @@ const GroupsComponent = () => {
   };
 
   if (groups.length == 0) {
-    handleAddGroup()
+    handleAddGroup();
   }
 
   return (
     <div>
-      <GroupsForm groups={groups} onGroupChange={handleGroupChange} onAddGroup={handleAddGroup} onAddressChange={handleAddressChange} onAddAddress={handleAddAddress} />
+      <GroupsForm
+        groups={groups}
+        onGroupChange={handleGroupChange}
+        onAddGroup={handleAddGroup}
+        onAddressChange={handleAddressChange}
+        onAddAddress={handleAddAddress}
+      />
     </div>
   );
-}
+};
 
 export default GroupsComponent;

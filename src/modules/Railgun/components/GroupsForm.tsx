@@ -3,28 +3,39 @@ import * as Yup from 'yup';
 import type { Group } from '../utils/types';
 
 interface GroupsSelectorProps {
-    groups: Group[];
-    onGroupChange: (index: number, name: string) => void;
-    onAddGroup: () => void;
-    onAddressChange: (groupIndex: number, addressIndex: number, address: string, nickname: string, amount: number) => void;
-    onAddAddress: (groupIndex: number) => void;
+  groups: Group[];
+  onGroupChange: (index: number, name: string) => void;
+  onAddGroup: () => void;
+  onAddressChange: (
+    groupIndex: number,
+    addressIndex: number,
+    address: string,
+    nickname: string,
+    amount: number,
+  ) => void;
+  onAddAddress: (groupIndex: number) => void;
 }
 
 interface GroupsIForm {
-    groups: Group[];
-    groupIndex: number;
+  groups: Group[];
+  groupIndex: number;
 }
 
 const getInitialValues = (groups: Group[]): GroupsIForm => {
-    const index = groups.findIndex((group) => group.selected);
-    return {
-        groups: groups,
-        groupIndex: index
-    }
-}
+  const index = groups.findIndex(group => group.selected);
+  return {
+    groups: groups,
+    groupIndex: index,
+  };
+};
 
-function GroupsForm({ groups, onGroupChange, onAddGroup, onAddressChange, onAddAddress }: GroupsSelectorProps) {
-
+function GroupsForm({
+  groups,
+  onGroupChange,
+  onAddGroup,
+  onAddressChange,
+  onAddAddress,
+}: GroupsSelectorProps) {
   const validationSchema = Yup.object({
     token: Yup.string().required('Please select a token'),
   });
@@ -38,42 +49,45 @@ function GroupsForm({ groups, onGroupChange, onAddGroup, onAddressChange, onAddA
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>
               <span className='text-gray-200'>Groupname</span>
-                <Field
-                  type="text"
-                  id="groupName"
-                  name={`groups.${values.groupIndex}.name`}
-                  className="mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50"
-                  placeholder="Groupname"
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => onGroupChange(values.groupIndex, e.target.value)}
-                />
-                <button
-                  id='addGroupButton'
-                  type='button'
-                  className='mt-2 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
-                  onClick={() => onAddGroup()}>
-                  Add New Group
-                </button>
-                <Field
-                    type='text'
-                    id='groupName'
-                    name={`${values.groups[values.groupIndex]}.name`}
-                    className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
-                    placeholder='Groupname'
-                    onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                      onGroupChange(values.groupIndex, e.target.value)}
-                />
-                <Field
-                  component='select'
-                  id='group'
-                  name='group'
-                  className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
-                  placeholder='Choose a Group'>
-                  {groups.map((group, index) => (
-                    <option key={index} value={group.name}>
-                      {group.name}
-                    </option>
-                  ))}
-                </Field>
+              <Field
+                type='text'
+                id='groupName'
+                name={`groups.${values.groupIndex}.name`}
+                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                placeholder='Groupname'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onGroupChange(values.groupIndex, e.target.value)
+                }
+              />
+              <button
+                id='addGroupButton'
+                type='button'
+                className='mt-2 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
+                onClick={() => onAddGroup()}>
+                Add New Group
+              </button>
+              <Field
+                type='text'
+                id='groupName'
+                name={`${values.groups[values.groupIndex]}.name`}
+                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                placeholder='Groupname'
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                  onGroupChange(values.groupIndex, e.target.value)
+                }
+              />
+              <Field
+                component='select'
+                id='group'
+                name='group'
+                className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                placeholder='Choose a Group'>
+                {groups.map((group, index) => (
+                  <option key={index} value={group.name}>
+                    {group.name}
+                  </option>
+                ))}
+              </Field>
               <p>
                 <span className='text-red-500'>
                   <ErrorMessage name='token' />
@@ -96,7 +110,14 @@ function GroupsForm({ groups, onGroupChange, onAddGroup, onAddressChange, onAddA
                               className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                               placeholder='Railgun Address (0zk...)'
                               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onAddressChange(values.groupIndex, index, e.target.value, address.nickname, address.amount)}
+                                onAddressChange(
+                                  values.groupIndex,
+                                  index,
+                                  e.target.value,
+                                  address.nickname,
+                                  address.amount,
+                                )
+                              }
                             />
                           </label>
                           <label className='block'>
@@ -108,7 +129,14 @@ function GroupsForm({ groups, onGroupChange, onAddGroup, onAddressChange, onAddA
                               className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                               placeholder='Railgun Address (0zk...)'
                               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                                onAddressChange(values.groupIndex, index, address.address, e.target.value, address.amount)}
+                                onAddressChange(
+                                  values.groupIndex,
+                                  index,
+                                  address.address,
+                                  e.target.value,
+                                  address.amount,
+                                )
+                              }
                             />
                           </label>
                         </div>
@@ -126,7 +154,7 @@ function GroupsForm({ groups, onGroupChange, onAddGroup, onAddressChange, onAddA
                     type='button'
                     className='mt-2 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
                     onClick={() => {
-                      onAddAddress(values.groupIndex)
+                      onAddAddress(values.groupIndex);
                     }}>
                     Add Railgun Address
                   </button>
