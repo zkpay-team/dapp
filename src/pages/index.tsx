@@ -43,11 +43,6 @@ function Home() {
       <div className='mt-4'>
         <TokenList balances={balances} />
       </div>
-
-      <ContactButton
-        userAddress={'0x0bBeb6e6cAF6cf45310B0FB0Ce89F30caf45b844'}
-        userHandle={'Toto'}
-      />
     </div>
   );
 }
