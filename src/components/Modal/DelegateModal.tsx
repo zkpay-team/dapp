@@ -18,7 +18,7 @@ function DelegateModal() {
   const delegateAddress = process.env.NEXT_PUBLIC_DELEGATE_ADDRESS as string;
 
   if (!user) {
-    return;
+    return null;
   }
 
   const checkDelegateState = async () => {
@@ -43,7 +43,7 @@ function DelegateModal() {
       signer!,
     );
     if (!signer || !provider || !user) {
-      return;
+      return null;
     }
     await toggleDelegation(user.id, delegateAddress, provider, validateState, contract);
 
