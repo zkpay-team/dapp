@@ -1,4 +1,4 @@
-import GroupsComponent from '../components/Groups/GroupsComponent';
+import GroupsComponent from '../modules/Railgun/components/Groups/GroupsComponent';
 
 function Groups() {
   return (
