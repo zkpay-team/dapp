@@ -38,6 +38,9 @@ function Send() {
       <div className='mt-10'>
         <SendForm />
       </div>
+
+      <hr />
+      <p>DEBUGG</p>
       <button
         type='button'
         className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
