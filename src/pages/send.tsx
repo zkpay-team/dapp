@@ -1,5 +1,6 @@
 import { useCallback, useContext } from 'react';
 import RailgunContext from '../modules/Railgun/context/railgun';
+import SendForm from '../modules/Railgun/components/SendForm';
 
 function Send() {
   const { account } = useContext(RailgunContext);
@@ -34,6 +35,9 @@ function Send() {
       <p className='text-3xl font-medium mb-8'>
         Payroll <span className='text-gray-100'>multisend </span>
       </p>
+      <div className='mt-10'>
+        <SendForm />
+      </div>
       <button
         type='button'
         className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg'
