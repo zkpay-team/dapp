@@ -50,8 +50,8 @@ export function useGenerateTransferProof({
     const { error } = await generateTransferProof(
       NetworkName.EthereumGoerli,
       railgunWalletID,
-      //   encryptionKey,
-      'bcb85448d3ca14c7eb2686263bc131b6e3d9af5fc74b4249a4815bc00c3b679d',
+      encryptionKey,
+      // 'bcb85448d3ca14c7eb2686263bc131b6e3d9af5fc74b4249a4815bc00c3b679d',
       showSenderAddressToRecipient,
       memoText,
       tokenAmountRecipients,

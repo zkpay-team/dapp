@@ -1,4 +1,4 @@
-import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
+import react, { useEffect } from 'react';
 import { Chain, useAccount } from 'wagmi';
 
 import {
@@ -16,7 +16,9 @@ import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
 import { NetworkName, RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
 import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
+import { usePopulateProvedTransfer } from '../hooks/usePopulateProvedTransfer';
 import { BigNumber } from 'ethers';
+import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 
 declare global {
   interface Window {
@@ -32,32 +34,41 @@ interface localStoreWallet {
   };
   fetchGasEstimate: () => Promise<void>;
   executeGenerateTransferProof: () => Promise<void>;
+  createPopulateProvedTransfer: () => Promise<void>;
+  serializedTransaction: string | undefined;
+  executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
 }
 
 export interface Balances {
   [key: string]: string;
 }
 
-const RailgunContext = createContext<{
+const RailgunContext = react.createContext<{
   isProviderLoaded: boolean;
   account?: IAccount;
   createWallet?: () => void;
   wallet?: LoadRailgunWalletResponse;
   fetchGasEstimate?: () => Promise<void>;
   executeGenerateTransferProof?: () => Promise<void>;
+  createPopulateProvedTransfer?: () => Promise<void>;
+  serializedTransaction?: string;
+  executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
   balances: Balances;
 }>({
   isProviderLoaded: false,
   balances: {},
+  executeSendTransaction: function (serializedTransaction: string | undefined): Promise<void> {
+    throw new Error('Function not implemented.');
+  },
 });
 
-const RailgunProvider = ({ children }: { children: ReactNode }) => {
+const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   const account = useAccount();
-  const [isProviderLoaded, setProviderLoaded] = useState<boolean>(false);
-  const [wallet, setWallet] = useState<LoadRailgunWalletResponse>();
-  const [balances, setBalances] = useState<Balances>({});
+  const [isProviderLoaded, setProviderLoaded] = react.useState<boolean>(false);
+  const [wallet, setWallet] = react.useState<LoadRailgunWalletResponse>();
+  const [balances, setBalances] = react.useState<Balances>({});
 
-  useEffect(() => {
+  react.useEffect(() => {
     console.log('wallet?.railgunWalletInfo?.id ', wallet?.railgunWalletInfo?.id);
   }, [wallet?.railgunWalletInfo?.id, wallet, wallet?.railgunWalletInfo]);
 
@@ -74,7 +85,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     },
   });
 
-  useEffect(() => {
+  react.useEffect(() => {
     console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { estimateError });
   }, [estimateError]);
 
@@ -95,10 +106,28 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
   });
 
   useEffect(() => {
+    console.log('checking executeGenerateTransferProof: ', executeGenerateTransferProof);
+  }, [executeGenerateTransferProof]);
+
+  react.useEffect(() => {
     console.log('proofError: ', proofError);
   }, [proofError]);
 
-  useEffect(() => {
+  const { createPopulateProvedTransfer, transactionError, serializedTransaction } =
+    usePopulateProvedTransfer({
+      railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+      tokenAmountRecipients: tokenAmountRecipients,
+      sendWithPublicWallet: false,
+      overallBatchMinGasPrice: '0',
+    });
+
+  react.useEffect(() => {
+    console.log('transactionError: ', transactionError);
+  }, [transactionError]);
+
+  const executeSendTransaction = useExecuteTransaction();
+
+  react.useEffect(() => {
     const fn = async () => {
       console.log('initializeRailgun');
       const response = initializeRailgun();
@@ -146,7 +175,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     fn();
   }, []);
 
-  const createWallet = useCallback(async () => {
+  const createWallet = react.useCallback(async () => {
     const mnemonic = entropyToMnemonic(randomBytes(16));
 
     // Current block numbers for each chain when wallet was first created.
@@ -176,7 +205,7 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     );
   }, []);
 
-  useEffect(() => {
+  react.useEffect(() => {
     if (!wallet) {
       return;
     }
@@ -209,16 +238,18 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     setOnBalanceUpdateCallback(onBalanceUpdateCallback as BalancesUpdatedCallback);
   }, [wallet]);
 
-  const value = useMemo(() => {
+  const value = react.useMemo(() => {
     return {
       account: account ? account : undefined,
       isProviderLoaded: isProviderLoaded,
       createWallet: createWallet,
       wallet: wallet,
-
       fetchGasEstimate: fetchGasEstimate,
       executeGenerateTransferProof: executeGenerateTransferProof,
+      createPopulateProvedTransfer: createPopulateProvedTransfer,
       balances: balances,
+      executeSendTransaction,
+      serializedTransaction,
     };
   }, [
     account.address,
@@ -226,6 +257,9 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     wallet,
     fetchGasEstimate,
     executeGenerateTransferProof,
+    createPopulateProvedTransfer,
+    serializedTransaction,
+    executeSendTransaction,
     balances,
   ]);
 
