@@ -13,7 +13,7 @@ function Steps({ targetTitle }: { targetTitle?: string }) {
   return (
     <>
       <nav className='mb-8'>
-        <ol className='divide-y divide-gray-200 rounded-md border border-gray-200 md:flex md:divide-y-0'>
+        <ol className='divide-y divide-gray-200 rounded border border-greeny md:flex md:divide-y-0'>
           <Step
             title='Create your wallet'
             status={!account?.isConnected ? 'inprogress' : 'done'}

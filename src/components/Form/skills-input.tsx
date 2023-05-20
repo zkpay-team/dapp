@@ -68,12 +68,12 @@ export function SkillsInput({
         <div className='relative'>
           <div className='relative mb-2'>
             <Combobox.Input
-              className='mt-1 block w-full rounded-md border-gray-300 focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+              className='mt-1 block w-full rounded border-gray-300 focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
               onChange={event => debounceSetQuery(event.target.value)}
             />
           </div>
           {query.length >= 2 && (
-            <Combobox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
+            <Combobox.Options className='absolute mt-1 max-h-60 w-full overflow-auto rounded bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none sm:text-sm'>
               {filteredSkills?.length === 0 && query.length >= MINIMUM_QUERY_LENGTH ? (
                 <div className='relative cursor-default select-none py-2 px-4 text-gray-700'>
                   Nothing found.

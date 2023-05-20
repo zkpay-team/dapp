@@ -107,14 +107,14 @@ function ReviewForm({ serviceId }: { serviceId: string }) {
           {/* {Object.keys(errors).map(errorKey => (
             <div key={errorKey}>{errors[errorKey]}</div>
           ))} */}
-          <div className='grid grid-cols-1 gap-6 border border-gray-200 rounded-md p-8'>
+          <div className='grid grid-cols-1 gap-6 border border-greeny rounded p-8'>
             <label className='block'>
               <span className='text-gray-700'>Message</span>
               <Field
                 as='textarea'
                 id='content'
                 name='content'
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
                 rows={5}
               />
@@ -131,7 +131,7 @@ function ReviewForm({ serviceId }: { serviceId: string }) {
                 name='rating'
                 min={0}
                 max={5}
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
               />
               <span className='text-red-500'>
                 <ErrorMessage name='rating' />

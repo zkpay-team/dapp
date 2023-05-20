@@ -12,9 +12,9 @@ function Dashboard() {
   const { account, user } = useContext(TalentLayerContext);
 
   return (
-    <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
+    <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
       <p className='text-5xl font-medium tracking-wider mb-8'>
-        Your <span className='text-zinc-600'>dashboard</span>
+        Your <span className='text-gray-100'>dashboard</span>
       </p>
 
       <Steps targetTitle={'Access your dashboard'} />

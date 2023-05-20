@@ -37,7 +37,7 @@ function ServiceDetail({ service }: { service: IService }) {
 
   return (
     <>
-      <div className='flex flex-row gap-2 rounded-xl p-4 border border-gray-200'>
+      <div className='flex flex-row gap-2 rounded-xl p-4 border border-greeny'>
         <div className='flex flex-col items-top justify-between gap-4 w-full'>
           <div className='flex flex-col justify-start items-start gap-4'>
             <div className='flex items-center justify-start w-full relative'>
@@ -63,7 +63,7 @@ function ServiceDetail({ service }: { service: IService }) {
             <div className=' border-t border-gray-100 pt-4 w-full'>
               {service.seller && (
                 <Link className='text-sm text-gray-500 mt-4' href={`/profile/${service.seller.id}`}>
-                  Job handle by <span className='text-zinc-600'>{service.seller.handle}</span>
+                  Job handle by <span className='text-gray-100'>{service.seller.handle}</span>
                 </Link>
               )}
               <div className='text-sm text-gray-500 mt-4'>

@@ -3,16 +3,18 @@ import { useContext } from 'react';
 import { toast } from 'react-toastify';
 import RailgunContext from '../modules/Railgun/context/railgun';
 import { shortenString } from '../utils';
+import TokenList from '../modules/Railgun/components/TokenList';
+import { ClipboardDocumentIcon } from '@heroicons/react/24/outline';
 
 function Home() {
-  const { wallet, createWallet } = useContext(RailgunContext);
-  console.log({ wallet, createWallet });
+  const { wallet, createWallet, balances } = useContext(RailgunContext);
+  console.log({ wallet, createWallet, balances });
 
   if (!wallet?.railgunWalletInfo) {
     return (
-      <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
-        <p className='text-3xl font-medium tracking-wider mb-8'>
-          Your <span className='text-zinc-600'>wallet </span>
+      <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
+        <p className='text-3xl font-medium mb-8'>
+          Your <span className='text-gray-100'>private wallet </span>
         </p>
         <button
           type='button'
@@ -38,14 +40,20 @@ function Home() {
   };
 
   return (
-    <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
-      <p className='text-3xl font-medium tracking-wider mb-8'>
-        Your <span className='text-zinc-600'>wallet </span>
+    <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
+      <p className='text-3xl font-medium mb-8'>
+        Your <span className='text-gray-100'>private wallet </span>
       </p>
-      <a onClick={handleCopyClick} className='flex'>
-        <DocumentDuplicate />
+      <a
+        onClick={handleCopyClick}
+        className='flex p-3 bg-endnight border-endnight rounded justify-between mb-10 text-greeny'>
         <span>{shortenString(wallet.railgunWalletInfo.railgunAddress, 8, 5)}</span>
+        <ClipboardDocumentIcon className='ml-2 h-5 w-5' />
       </a>
+
+      <div className='mt-4'>
+        <TokenList balances={balances} />
+      </div>
     </div>
   );
 }

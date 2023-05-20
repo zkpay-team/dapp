@@ -58,35 +58,35 @@ function UserIncomes({ id }: { id: string }) {
       ) : (
         <div>
           <div className=''>
-            <table className='p-4 border border-gray-200 w-full table-fixed'>
+            <table className='p-4 border border-greeny w-full table-fixed'>
               <thead>
                 <tr>
-                  <th className='border border-gray-200 p-2'>Amount</th>
-                  <th className='border border-gray-200 p-2'>Date</th>
-                  <th className='border border-gray-200 p-2'>Token</th>
-                  <th className='border border-gray-200 p-2'>Service</th>
-                  <th className='border border-gray-200 p-2'>Transaction information</th>
+                  <th className='border border-greeny p-2'>Amount</th>
+                  <th className='border border-greeny p-2'>Date</th>
+                  <th className='border border-greeny p-2'>Token</th>
+                  <th className='border border-greeny p-2'>Service</th>
+                  <th className='border border-greeny p-2'>Transaction information</th>
                 </tr>
               </thead>
               <tbody>
                 {payments.map((payment, i) => {
                   return (
                     <tr key={i}>
-                      <td className='border border-gray-200 p-2 font-bold'>
+                      <td className='border border-greeny p-2 font-bold'>
                         {renderTokenAmount(payment.rateToken, payment.amount)}
                       </td>
-                      <td className='border border-gray-200 p-2 text-gray-500'>
+                      <td className='border border-greeny p-2 text-gray-500'>
                         {formatStringCompleteDate(payment.createdAt)}
                       </td>
-                      <td className='border border-gray-200 p-2 text-gray-500'>
+                      <td className='border border-greeny p-2 text-gray-500'>
                         {payment.rateToken.symbol}
                       </td>
-                      <td className='border border-gray-200 p-2 text-blue-500'>
+                      <td className='border border-greeny p-2 text-blue-500'>
                         <a target='_blank' href={`/services/${payment.service.id}`}>
                           Service n°{payment.service.id}{' '}
                         </a>
                       </td>
-                      <td className='border border-gray-200 p-2 text-blue-500'>
+                      <td className='border border-greeny p-2 text-blue-500'>
                         {network.chain?.id === 137 || network.chain?.id === 80001 ? (
                           <a
                             target='_blank'
@@ -107,7 +107,7 @@ function UserIncomes({ id }: { id: string }) {
                 <button
                   type='submit'
                   className={`px-5 py-2 mt-5 content-center border border-zinc-600 rounded-full text-zinc-600 
-              hover:text-white hover:bg-zinc-900
+              hover:text-white hover:bg-midnight
             `}
                   disabled={!hasMoreData}
                   onClick={() => loadMore()}>

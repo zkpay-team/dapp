@@ -1,5 +1,5 @@
-export const truncateAddress = (address: string, length = 5) => {
-  return `${address.substring(0, length)}...${address.substring(
+export const truncateAddress = (address: string, length = 3) => {
+  return `${address.substring(0, length + 1)}...${address.substring(
     address.length - length,
     address.length,
   )}`;

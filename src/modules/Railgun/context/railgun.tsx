@@ -1,11 +1,13 @@
 import { createContext, ReactNode, useCallback, useEffect, useMemo, useState } from 'react';
-import { useAccount } from 'wagmi';
+import { Chain, useAccount } from 'wagmi';
 
 import {
   getProver,
   Groth16,
   createRailgunWallet,
   loadWalletByID,
+  setOnBalanceUpdateCallback,
+  BalancesUpdatedCallback,
 } from '@railgun-community/quickstart';
 import { IAccount } from '../../../types';
 import { initializeRailgun, loadProviders } from '../utils/setup';
@@ -14,6 +16,7 @@ import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
 import { NetworkName, RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
 import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
+import { BigNumber } from 'ethers';
 
 declare global {
   interface Window {
@@ -31,6 +34,10 @@ interface localStoreWallet {
   executeGenerateTransferProof: () => Promise<void>;
 }
 
+export interface Balances {
+  [key: string]: string;
+}
+
 const RailgunContext = createContext<{
   isProviderLoaded: boolean;
   account?: IAccount;
@@ -38,14 +45,17 @@ const RailgunContext = createContext<{
   wallet?: LoadRailgunWalletResponse;
   fetchGasEstimate?: () => Promise<void>;
   executeGenerateTransferProof?: () => Promise<void>;
+  balances: Balances;
 }>({
   isProviderLoaded: false,
+  balances: {},
 });
 
 const RailgunProvider = ({ children }: { children: ReactNode }) => {
   const account = useAccount();
   const [isProviderLoaded, setProviderLoaded] = useState<boolean>(false);
   const [wallet, setWallet] = useState<LoadRailgunWalletResponse>();
+  const [balances, setBalances] = useState<Balances>({});
 
   useEffect(() => {
     console.log('wallet?.railgunWalletInfo?.id ', wallet?.railgunWalletInfo?.id);
@@ -166,16 +176,58 @@ const RailgunProvider = ({ children }: { children: ReactNode }) => {
     );
   }, []);
 
+  useEffect(() => {
+    if (!wallet) {
+      return;
+    }
+
+    console.log('GET BALANCES', wallet);
+
+    const onBalanceUpdateCallback = ({
+      chain,
+      railgunWalletID,
+      erc20Amounts,
+    }: {
+      chain: Chain;
+      railgunWalletID: string;
+      erc20Amounts: {
+        tokenAddress: string;
+        amountString: string;
+      }[];
+    }): void => {
+      // Do something with the private token balances.
+      console.log('onBalanceUpdateCallback', { erc20Amounts, chain, railgunWalletID });
+      const balances: Balances = {};
+      erc20Amounts.map(erc20Amount => {
+        balances[erc20Amount.tokenAddress] = BigNumber.from(erc20Amount.amountString).toString();
+      });
+      setBalances(balances);
+    };
+
+    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+    // @ts-ignore
+    setOnBalanceUpdateCallback(onBalanceUpdateCallback as BalancesUpdatedCallback);
+  }, [wallet]);
+
   const value = useMemo(() => {
     return {
       account: account ? account : undefined,
       isProviderLoaded: isProviderLoaded,
       createWallet: createWallet,
       wallet: wallet,
+
       fetchGasEstimate: fetchGasEstimate,
       executeGenerateTransferProof: executeGenerateTransferProof,
+      balances: balances,
     };
-  }, [account.address, isProviderLoaded, wallet, fetchGasEstimate]);
+  }, [
+    account.address,
+    isProviderLoaded,
+    wallet,
+    fetchGasEstimate,
+    executeGenerateTransferProof,
+    balances,
+  ]);
 
   return <RailgunContext.Provider value={value}>{children}</RailgunContext.Provider>;
 };
