@@ -38,11 +38,11 @@ export function useGasEstimateMultiTransfer({
           amountString: '0x10', // hexadecimal amount decimal meaning 16
           recipientAddress: railgunAddress,
         },
-        {
-          tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-          amountString: '0x10', // hexadecimal amount meaning 16
-          recipientAddress: railgunAddress,
-        },
+        // {
+        //   tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
+        //   amountString: '0x10', // hexadecimal amount meaning 16
+        //   recipientAddress: railgunAddress,
+        // },
       ];
 
       // Gas price, used to calculate Relayer Fee iteratively.
