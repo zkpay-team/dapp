@@ -1,6 +1,6 @@
 /** @type {import('next-sitemap').IConfig} */
 module.exports = {
-  siteUrl: 'https://claim.talentlayer.org',
+  siteUrl: 'https://zkpay.io',
   generateRobotsTxt: true,
   generateIndexSitemap: false,
-}
+};

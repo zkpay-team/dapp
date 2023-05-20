@@ -1,5 +1,6 @@
 const title = 'ZK Pay';
-const description = 'ZK Pay is a freelance marketplace where privacy is everywhere';
+const description =
+  'ZK Pay is an infrastructure to support use cases like private bounty and private payroll payments';
 const url = 'https://zkpay.io';
 
 // eslint-disable-next-line import/no-anonymous-default-export

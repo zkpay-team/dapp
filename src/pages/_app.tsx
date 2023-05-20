@@ -16,6 +16,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout';
 import { useEffect } from 'react';
 import { RailgunProvider } from '../context/railgun';
+import SEO from '../../next-seo.config';
 
 const chains: Chain[] = [customChains.polygonMumbai];
 
@@ -44,7 +45,7 @@ function MyApp({ Component, pageProps }: AppProps) {
   return (
     <>
       <GoogleAnalytics trackPageViews />
-      <DefaultSeo />
+      <DefaultSeo {...SEO} />
       <ToastContainer position='bottom-right' />
       <WagmiConfig client={wagmiClient}>
         <RailgunProvider>
