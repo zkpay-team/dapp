@@ -22,6 +22,7 @@ const RailgunContext = createContext<{
 const RailgunProvider = ({ children }: { children: ReactNode }) => {
   const account = useAccount();
   const [isProviderLoaded, setProviderLoaded] = useState<boolean>(false);
+  // const [wallet, setWallet] = useState<LoadRailgunWalletResponse>();
 
   console.log('RailgunProvider', { isProviderLoaded });
 
