@@ -20,6 +20,25 @@ import { usePopulateProvedTransfer } from '../hooks/usePopulateProvedTransfer';
 import { BigNumber } from 'ethers';
 import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 
+const tokenAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'.toLowerCase();
+
+export const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
+  {
+    tokenAddress, // GOERLI DAI
+    amountString: '100', // hexadecimal amount decimal meaning 16
+    // recipientAddress: railgunAddresses[0],
+    recipientAddress:
+      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+  },
+  {
+    tokenAddress, // GOERLI DAI
+    amountString: '100', // hexadecimal amount decimal meaning 16
+    // recipientAddress: railgunAddresses[1],
+    recipientAddress:
+      '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
+  },
+];
+
 declare global {
   interface Window {
     snarkjs: { groth16: Groth16 };
@@ -77,9 +96,10 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   console.log('RailgunProvider', { isProviderLoaded });
 
   const { gasEstimate, estimateError, fetchGasEstimate } = useGasEstimateMultiTransfer({
-    railgunAddress:
-      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel' ||
-      '',
+    railgunAddresses: [
+      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+      '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
+    ],
     railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
     selectedTokenFeeAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', //goerli dai
     selectedRelayer: {
@@ -91,18 +111,24 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { estimateError });
   }, [estimateError]);
 
-  const tokenAmountRecipients: RailgunERC20AmountRecipient[] = [
-    {
-      tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-      amountString: '0x10', // hexadecimal amount decimal meaning 16
-      recipientAddress:
-        '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
-    },
-  ];
+  // const tokenAmountRecipients: RailgunERC20AmountRecipient[] = [
+  //   {
+  //     tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
+  //     amountString: '0x10', // hexadecimal amount decimal meaning 16
+  //     recipientAddress:
+  //       '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+  //   },
+  //   {
+  //     tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
+  //     amountString: '0x10', // hexadecimal amount decimal meaning 16
+  //     recipientAddress:
+  //       '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
+  //   },
+  // ];
 
   const { proofError, executeGenerateTransferProof } = useGenerateTransferProof({
     railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-    tokenAmountRecipients: tokenAmountRecipients,
+    tokenAmountRecipients: erc20AmountRecipients,
     sendWithPublicWallet: true,
     overallBatchMinGasPrice: '0',
   });
@@ -115,10 +141,11 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     console.log('proofError: ', proofError);
   }, [proofError]);
 
+  // console.log('erc20AmountRecipients: when calling hook', erc20AmountRecipients);
   const { createPopulateProvedTransfer, transactionError, serializedTransaction } =
     usePopulateProvedTransfer({
       railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-      tokenAmountRecipients: tokenAmountRecipients,
+      tokenAmountRecipients: erc20AmountRecipients,
       sendWithPublicWallet: true,
       overallBatchMinGasPrice: '0',
     });

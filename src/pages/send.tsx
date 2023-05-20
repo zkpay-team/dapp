@@ -1,7 +1,5 @@
-import { useCallback, useContext, useEffect } from 'react';
+import { useCallback, useContext } from 'react';
 import RailgunContext from '../modules/Railgun/context/railgun';
-import { useProvider, useSigner } from 'wagmi';
-import { ethers } from 'ethers';
 
 function Send() {
   const { account } = useContext(RailgunContext);

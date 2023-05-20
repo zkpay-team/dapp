@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback } from 'react';
 import { populateProvedTransfer } from '@railgun-community/quickstart';
 
 import {
@@ -9,6 +9,7 @@ import {
 } from '@railgun-community/shared-models';
 import { useSigner } from 'wagmi';
 import { BigNumber, ethers } from 'ethers';
+import { erc20AmountRecipients } from '../context/railgun';
 
 type Optional<T> = T | undefined;
 
@@ -72,9 +73,9 @@ export function usePopulateProvedTransfer({
         maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
         maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
       };
-      const erc20AmountRecipients = tokenAmountRecipients;
+      // const erc20AmountRecipients = tokenAmountRecipients;
       const showSenderAddressToRecipient = true;
-
+      console.log('erc20AmountRecipients showing before populating', erc20AmountRecipients);
       const { serializedTransaction: serializedTx, error } = await populateProvedTransfer(
         NetworkName.EthereumGoerli,
         railgunWalletID,
