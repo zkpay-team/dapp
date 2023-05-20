@@ -114,7 +114,7 @@ function ReviewForm({ serviceId }: { serviceId: string }) {
                 as='textarea'
                 id='content'
                 name='content'
-                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
                 placeholder=''
                 rows={5}
               />
@@ -131,7 +131,7 @@ function ReviewForm({ serviceId }: { serviceId: string }) {
                 name='rating'
                 min={0}
                 max={5}
-                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
               />
               <span className='text-red-500'>
                 <ErrorMessage name='rating' />

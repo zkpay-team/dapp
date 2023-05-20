@@ -55,7 +55,7 @@ function ReceiveForm() {
                   type='number'
                   id='amount'
                   name='amount'
-                  className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
                   placeholder=''
                 />
               </label>
@@ -65,7 +65,7 @@ function ReceiveForm() {
                   component='select'
                   id='token'
                   name='token'
-                  className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
                   placeholder=''>
                   <option value=''>Token</option>
                   {tokens.map((token, index) => (

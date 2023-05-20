@@ -1,44 +1,60 @@
 import { ErrorMessage, Field, FieldArray, Form, Formik } from 'formik';
-import * as Yup from 'yup';
-import SubmitButton from '../../../components/Form/SubmitButton';
-import { tokens } from './TokenList';
-import { toast } from 'react-toastify';
-import { useContext } from 'react';
-import RailgunContext from '../context/railgun';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
+import * as Yup from 'yup';
+import SubmitButton from '../../../components/Form/SubmitButton';
+import RailgunContext from '../context/railgun';
 
-interface IFormValues {
-  token: string;
-  recipients: Recipient[];
+export interface Group {
+  id: string;
+  name: string;
+  users: User[];
 }
 
-interface Recipient {
+export interface IFormValues {
+  name: string;
+  users: User[];
+}
+
+interface User {
   to: string;
-  amount: number;
+  nickname: string;
 }
 
-// @dev to test it: ?token=0xdc31ee1784292379fbb2964b3b9c4124d8f89c60&amount[0]=10&to[0]=0zk1qyy6yz7c2h5cxyyrzgxvql9clj2gu6u6f7dszt5trhhn0xm5zug7frv7j6fe3z53laydg6xztk8z5w2y37wmy3u9y64q7fpq53d32cn90tmlra5kveqqjeluam2&amount[1]=30&to[1]=0zk123456789123456789
 const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
+  if (query.id) {
+    const groups = localStorage.getItem('groups')
+      ? JSON.parse(localStorage.getItem('groups') as string)
+      : [];
+
+    const group = groups.find((group: Group) => group.id === query.id);
+
+    console.log('getInitialValuesFromUrl', { groups, group, query });
+    return group;
+  }
+
   return {
-    token: (query['token'] as string) || '',
-    recipients: [
+    name: (query['name'] as string) || '',
+    users: [
       {
         to: (query['to[0]'] as string) || '',
-        amount: parseInt(query['amount[0]'] as string) || 0,
+        nickname: (query['nickname[0]'] as string) || '',
       },
       {
         to: (query['to[1]'] as string) || '',
-        amount: parseInt(query['amount[1]'] as string) || 0,
+        nickname: (query['nickname[1]'] as string) || '',
       },
     ],
   };
 };
 
-function SendForm() {
+function GroupForm() {
   const { wallet } = useContext(RailgunContext);
   const router = useRouter();
   const query = router.query;
+  const isEditing = !!query.id;
 
   if (!wallet?.railgunWalletInfo) {
     return null;
@@ -46,16 +62,33 @@ function SendForm() {
 
   const initialValues: IFormValues = getInitialValuesFromUrl(query);
 
+  console.log('initialValues', { initialValues });
+
   const validationSchema = Yup.object({
-    token: Yup.string().required('Please select a token'),
+    name: Yup.string().required('Please select a name'),
   });
 
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
-    console.log('values', { values });
+    for (let i = values.users.length - 1; i >= 0; i--) {
+      if (values.users[i].to === '') {
+        values.users.splice(i, 1);
+      }
+    }
 
-    // TODO: format values (remove empty row)
+    const groups = localStorage.getItem('groups')
+      ? JSON.parse(localStorage.getItem('groups') as string)
+      : [];
 
-    toast('Money sended!', {
+    if (isEditing) {
+      const index = groups.findIndex((group: Group) => group.id === query.id);
+      groups[index] = { ...values };
+    } else {
+      groups.push({ id: Date.now().toString(), ...values });
+    }
+
+    localStorage.setItem('groups', JSON.stringify(groups));
+
+    toast(isEditing ? 'Group updated!' : 'Group created!', {
       position: 'bottom-right',
       autoClose: 5000,
       hideProgressBar: false,
@@ -65,6 +98,7 @@ function SendForm() {
       theme: 'dark',
     });
     resetForm();
+    router.push('/groups');
   };
 
   return (
@@ -73,31 +107,25 @@ function SendForm() {
         <Form>
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>
-              <span className='text-gray-200'>Token</span>
+              <span className='text-gray-200'>name</span>
               <Field
-                component='select'
-                id='token'
-                name='token'
-                className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
-                placeholder='Choose a token..'>
-                <option value=''></option>
-                {tokens.map((token, index) => (
-                  <option key={index} value={token.address}>
-                    {token.code}
-                  </option>
-                ))}
-              </Field>
+                type='text'
+                id='name'
+                name='name'
+                className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
+                placeholder=''
+              />
               <p>
                 <span className='text-red-500'>
-                  <ErrorMessage name='token' />
+                  <ErrorMessage name='name' />
                 </span>
               </p>
             </label>
-            <FieldArray name='recipients'>
+            <FieldArray name='users'>
               {({ push }) => (
                 <div className='mb-2'>
-                  {values.recipients.length > 0 &&
-                    values.recipients.map((recipient, index) => (
+                  {values.users.length > 0 &&
+                    values.users.map((recipient, index) => (
                       <div className='row' key={index}>
                         <div className='flex w-full'>
                           <label className='block flex-1 mr-4'>
@@ -105,17 +133,17 @@ function SendForm() {
                             <Field
                               type='text'
                               id='to'
-                              name={`recipients.${index}.to`}
-                              className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
+                              name={`users.${index}.to`}
+                              className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50 '
                               placeholder=''
                             />
                           </label>
                           <label className='block flex-1'>
-                            <span className='text-gray-200'>Amount</span>
+                            <span className='text-gray-200'>Nickname</span>
                             <Field
-                              type='number'
-                              id='amount'
-                              name={`recipients.${index}.amount`}
+                              type='text'
+                              id='nickname'
+                              name={`users.${index}.nickname`}
                               className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:ring-opacity-50'
                               placeholder=''
                             />
@@ -123,10 +151,10 @@ function SendForm() {
                         </div>
                         <p>
                           <span className='text-red-500 mt-2'>
-                            <ErrorMessage name={`recipients.${index}.amount`} />
+                            <ErrorMessage name={`users.${index}.nickname`} />
                           </span>
                           <span className='text-red-500'>
-                            <ErrorMessage name={`recipients.${index}.to`} />
+                            <ErrorMessage name={`users.${index}.to`} />
                           </span>
                         </p>
                       </div>
@@ -134,14 +162,14 @@ function SendForm() {
                   <button
                     type='button'
                     className='mt-2 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
-                    onClick={() => push({ amount: '', to: '' })}>
+                    onClick={() => push({ nickname: '', to: '' })}>
                     Add Recipient
                   </button>
                 </div>
               )}
             </FieldArray>
 
-            <SubmitButton isSubmitting={isSubmitting} label='Send' />
+            <SubmitButton isSubmitting={isSubmitting} label={isEditing ? 'Udpate' : 'Create'} />
           </div>
         </Form>
       )}
@@ -149,4 +177,4 @@ function SendForm() {
   );
 }
 
-export default SendForm;
+export default GroupForm;
