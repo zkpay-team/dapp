@@ -15,10 +15,10 @@ import '../styles/globals.css';
 import 'react-toastify/dist/ReactToastify.css';
 import Layout from './Layout';
 import { useEffect } from 'react';
-import { RailgunProvider } from '../context/railgun';
 import SEO from '../../next-seo.config';
 
 import Script from 'next/script';
+import { RailgunProvider } from '../modules/Railgun/context/railgun';
 
 const chains: Chain[] = [customChains.polygonMumbai];
 
