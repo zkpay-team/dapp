@@ -181,7 +181,7 @@ function ProposalForm({
           <ServiceItem service={service} />
 
           <h2 className=' mt-8 mb-2 text-gray-900 font-bold'>Describe your proposal in details:</h2>
-          <div className='grid grid-cols-1 gap-6 border border-gray-200 rounded-md p-8'>
+          <div className='grid grid-cols-1 gap-6 border border-greeny rounded p-8'>
             <label className='block'>
               <span className='text-gray-700'>about</span>
               <Field
@@ -189,7 +189,7 @@ function ProposalForm({
                 id='about'
                 rows={8}
                 name='about'
-                className='mt-1 mb-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
               <span className='text-red-500'>
@@ -204,7 +204,7 @@ function ProposalForm({
                   type='number'
                   id='rateAmount'
                   name='rateAmount'
-                  className='mt-1 mb-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 mb-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                   placeholder=''
                 />
                 <span className='text-red-500'>
@@ -217,7 +217,7 @@ function ProposalForm({
                   component='select'
                   id='rateToken'
                   name='rateToken'
-                  className='mt-1 mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 mb-2 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                   placeholder=''>
                   <option value=''>Select a token</option>
                   {allowedTokenList.map((token, index) => (
@@ -237,7 +237,7 @@ function ProposalForm({
                 type='number'
                 id='expirationDate'
                 name='expirationDate'
-                className='mt-1 mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-2 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
               <span className='text-red-500'>
@@ -250,7 +250,7 @@ function ProposalForm({
                 type='text'
                 id='videoUrl'
                 name='videoUrl'
-                className='mt-1 mb-2 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 mb-2 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder='Enter  video URL'
               />
               <span className='text-red-500'>

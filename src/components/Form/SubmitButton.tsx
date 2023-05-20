@@ -12,12 +12,12 @@ function SubmitButton({
   const { open: openConnectModal } = useWeb3Modal();
 
   return (
-    <div className='flex flex-row justify-between items-center ml-4 sm:ml-2'>
+    <div className='flex flex-row justify-between items-center sm:ml-2'>
       {isSubmitting ? (
         <button
           disabled
           type='submit'
-          className='py-2 px-5 mr-2 text-gray-900 bg-white rounded-lg border border-gray-200 hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 inline-flex items-center'>
+          className='py-2 px-5 mr-2 text-gray-900 bg-white rounded-lg border border-greeny hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 inline-flex items-center'>
           <svg
             role='status'
             className='inline mr-2 w-4 h-4 text-gray-200 animate-spin '
@@ -38,7 +38,7 @@ function SubmitButton({
       ) : isConnected ? (
         <button
           type='submit'
-          className='px-5 py-2 border border-zinc-600 rounded-md hover:text-zinc-600 hover:bg-white text-white bg-zinc-900'>
+          className='grow px-5 py-2 border border-greeny rounded   hover:bg-endnight text-white bg-midnight'>
           {label}
         </button>
       ) : (
@@ -47,7 +47,7 @@ function SubmitButton({
             openConnectModal();
           }}
           type='button'
-          className='px-5 py-2 border border-zinc-600 rounded-md hover:text-zinc-600 hover:bg-white text-white bg-zinc-900'>
+          className='grow px-5 py-2 border border-greeny rounded   hover:bg-midnight text-white bg-midnight'>
           {'Connect first'}
         </button>
       )}

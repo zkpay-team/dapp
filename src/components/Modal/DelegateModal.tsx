@@ -109,7 +109,7 @@ function DelegateModal() {
                 <p>You can cancel it at any time</p>
               </div>
             </div>
-            <div className='flex items-center p-6 space-x-2 rounded-b border-t border-gray-200 '>
+            <div className='flex items-center p-6 space-x-2 rounded-b border-t border-greeny '>
               {hasPlatformAsDelegate ? (
                 <button
                   onClick={() => onSubmit(false)}

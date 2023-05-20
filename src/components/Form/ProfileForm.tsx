@@ -117,14 +117,14 @@ function ProfileForm({ callback }: { callback?: () => void }) {
       validationSchema={validationSchema}>
       {({ isSubmitting }) => (
         <Form>
-          <div className='grid grid-cols-1 gap-6 border border-gray-200 rounded-md p-8'>
+          <div className='grid grid-cols-1 gap-6 border border-greeny rounded p-8'>
             <label className='block'>
               <span className='text-gray-700'>Title</span>
               <Field
                 type='text'
                 id='title'
                 name='title'
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
             </label>
@@ -134,7 +134,7 @@ function ProfileForm({ callback }: { callback?: () => void }) {
                 type='text'
                 id='name'
                 name='name'
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
             </label>
@@ -144,7 +144,7 @@ function ProfileForm({ callback }: { callback?: () => void }) {
                 as='select'
                 id='role'
                 name='role'
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''>
                 <option value=''></option>
                 <option value='buyer'>Buyer</option>
@@ -160,7 +160,7 @@ function ProfileForm({ callback }: { callback?: () => void }) {
                 id='about'
                 name='about'
                 rows='4'
-                className='mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                 placeholder=''
               />
             </label>

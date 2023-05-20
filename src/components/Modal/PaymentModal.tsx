@@ -80,7 +80,7 @@ function PaymentModal({ service, payments, isBuyer }: IPaymentModalProps) {
                     Payments summary
                   </h3>
                 )}
-                <div className='flex justify-center items-center w-full space-y-4 flex-col border-gray-200 border-b pb-4'>
+                <div className='flex justify-center items-center w-full space-y-4 flex-col border-greeny border-b pb-4'>
                   <div className='flex justify-between w-full'>
                     <p className='text-base leading-4 text-gray-800'>Job rate</p>
                     <p className='text-base  leading-4 text-gray-600'>

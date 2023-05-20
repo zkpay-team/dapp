@@ -19,7 +19,7 @@ function HelpPopover(props: { children: React.ReactNode }) {
       <div
         className={`${
           showHelp ? '' : 'opacity-0 invisible'
-        } right-2 top-14 absolute z-10 inline-block text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-gray-200 rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400`}>
+        } right-2 top-14 absolute z-10 inline-block text-sm font-light text-gray-500 transition-opacity duration-300 bg-white border border-greeny rounded-lg shadow-sm w-72 dark:bg-gray-800 dark:border-gray-600 dark:text-gray-400`}>
         <div className='p-3 space-y-2'>{props.children}</div>
       </div>
     </div>

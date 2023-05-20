@@ -20,7 +20,7 @@ import SEO from '../../next-seo.config';
 import Script from 'next/script';
 import { RailgunProvider } from '../modules/Railgun/context/railgun';
 
-const chains: Chain[] = [customChains.polygonMumbai];
+const chains: Chain[] = [customChains.goerli];
 
 // Wagmi client
 const { provider } = configureChains(chains, [

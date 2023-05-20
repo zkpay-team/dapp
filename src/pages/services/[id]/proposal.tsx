@@ -24,28 +24,28 @@ function CreateOrEditProposal() {
   }
 
   return (
-    <div className='max-w-7xl mx-auto text-gray-900 sm:px-4 lg:px-0'>
+    <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>
       <Back />
       {existingProposal &&
       existingProposal.status === ProposalStatusEnum.Pending &&
       service.status === ServiceStatusEnum.Opened ? (
         <p className='text-5xl font-medium tracking-wider mb-8'>
-          Edit <span className='text-zinc-600'>your proposal</span>
+          Edit <span className='text-gray-100'>your proposal</span>
         </p>
       ) : service.status !== ServiceStatusEnum.Opened ? (
         <p className='text-5xl font-medium tracking-wider mb-8'>
-          This service is not <span className='text-zinc-600'>open </span> for proposals any more
+          This service is not <span className='text-gray-100'>open </span> for proposals any more
         </p>
       ) : (
         <p className='text-5xl font-medium tracking-wider mb-8'>
-          Create <span className='text-zinc-600'>a proposal</span>
+          Create <span className='text-gray-100'>a proposal</span>
         </p>
       )}
 
       <Steps targetTitle={'Filled the proposal form'} />
 
       {!userExists() && account?.isConnected && user && (
-        <div className='border border-gray-200 rounded-md p-8'>
+        <div className='border border-greeny rounded p-8'>
           <p className='text-gray-500 py-4'>
             In order to create a proposal, you need to be registered to our decentralized messaging
             service. Please sign in to our messaging service to verify your identity :

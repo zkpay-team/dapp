@@ -2,9 +2,10 @@ import { useRouter } from 'next/router';
 
 function BottomLink({ children, href }: { children: React.ReactNode; href: string }) {
   const router = useRouter();
-  let className = router.asPath === href ? 'bg-zinc-900 text-white' : 'bg-zinc-800 text-zinc-400';
+  let className =
+    router.asPath === href ? 'bg-greeny text-midnight font-medium' : 'bg-midnight font-light';
 
-  className += ' inline-flex flex-col items-center justify-center px-5 hover:bg-zinc-800 group';
+  className += ' inline-flex flex-col items-center justify-center px-5 hover:bg-greeny group  ';
 
   const handleClick = (e: any) => {
     e.preventDefault();
