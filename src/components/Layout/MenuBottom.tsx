@@ -3,7 +3,7 @@ import { navigation } from './navigation';
 
 function MenuBottom() {
   return (
-    <div className='md:hidden fixed bottom-0 left-0 z-50 w-full h-16 border-t border-greeny'>
+    <div className='menuBottom md:hidden fixed bottom-0 left-0 z-50 w-full h-16 border-t border-greeny'>
       <div className={`grid h-full max-w-lg grid-cols-5 font-medium`}>
         {navigation.map(item => (
           <BottomLink key={item.name} href={item.href}>

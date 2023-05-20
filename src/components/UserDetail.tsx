@@ -68,7 +68,7 @@ function UserDetail({ user }: { user: IUser }) {
               View profile
             </Link>
             <Link
-              className='text-green-600 bg-green-50 hover:bg-green-500 hover:text-white px-5 py-2 rounded-lg'
+              className='text-green-600 bg-green-50 hover:bg-greeny hover:text-white px-5 py-2 rounded-lg'
               href={`/profile/edit`}>
               Edit profile
             </Link>

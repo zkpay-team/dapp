@@ -66,7 +66,7 @@ function UserProposalItem({ proposal }: { proposal: IProposal }) {
             Show Job
           </Link>
           {isBuyer && proposal.status === ProposalStatusEnum.Pending && (
-            <button className='text-green-600 bg-green-50 hover:bg-green-500 hover:text-white px-5 py-2 rounded-lg'>
+            <button className='text-green-600 bg-green-50 hover:bg-greeny hover:text-white px-5 py-2 rounded-lg'>
               Validate proposal
             </button>
           )}

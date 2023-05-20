@@ -36,19 +36,19 @@ function Send() {
       </p>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg'
         onClick={createProof}>
         Create Proof to Send.
       </button>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg'
         onClick={gasEstimate}>
         Get Gas Estimate.
       </button>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded-lg'
         onClick={() => {
           console.log('Sendddd it boyy');
         }}>

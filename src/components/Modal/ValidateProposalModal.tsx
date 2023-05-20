@@ -73,7 +73,7 @@ function ValidateProposalModal({ proposal, account }: { proposal: IProposal; acc
     <>
       <button
         onClick={() => setShow(true)}
-        className='block text-green-600 bg-green-50 hover:bg-green-500 hover:text-white rounded-lg px-5 py-2.5 text-center'
+        className='block text-green-600 bg-green-50 hover:bg-greeny hover:text-white rounded-lg px-5 py-2.5 text-center'
         type='button'
         data-modal-toggle='defaultModal'>
         Validate proposal
@@ -188,7 +188,7 @@ function ValidateProposalModal({ proposal, account }: { proposal: IProposal; acc
                       <p className=''>
                         <span
                           className={`block ${
-                            hasEnoughBalance() ? 'bg-green-500' : 'bg-red-500'
+                            hasEnoughBalance() ? 'bg-greeny' : 'bg-red-500'
                           } p-1 text-xs font-medium text-white rounded-full`}>
                           {hasEnoughBalance() ? (
                             <Check className='w-4 h-4' />
@@ -208,7 +208,7 @@ function ValidateProposalModal({ proposal, account }: { proposal: IProposal; acc
                         <span
                           className={`block ${
                             (isProposalUseEth && hasEnoughBalance()) || ethBalance.value.gt(0)
-                              ? 'bg-green-500'
+                              ? 'bg-greeny'
                               : 'bg-red-500'
                           } p-1 text-xs font-medium text-white rounded-full`}>
                           {(isProposalUseEth && hasEnoughBalance()) || ethBalance.value.gt(0) ? (
@@ -228,7 +228,7 @@ function ValidateProposalModal({ proposal, account }: { proposal: IProposal; acc
                 <button
                   onClick={() => onSubmit()}
                   type='button'
-                  className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white rounded-lg px-5 py-2.5 text-center'>
+                  className='hover:text-green-600 hover:bg-green-50 bg-greeny text-white rounded-lg px-5 py-2.5 text-center'>
                   {isProposalUseEth ? 'Validate proposal' : 'Allow spending'}
                 </button>
               ) : (
