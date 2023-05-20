@@ -1,19 +1,19 @@
 {
-    "name": "ZK Work",
-    "short_name": "ZKW",
+    "name": "ZKPay",
+    "short_name": "ZKPay",
     "icons": [
         {
-            "src": "/android-chrome-192x192.png",
+            "src": "/images/android-chrome-192x192.png",
             "sizes": "192x192",
             "type": "image/png"
         },
         {
-            "src": "/android-chrome-512x512.png",
+            "src": "/images/android-chrome-512x512.png",
             "sizes": "512x512",
             "type": "image/png"
         }
     ],
-    "theme_color": "#333333",
-    "background_color": "#333333",
+    "theme_color": "#11112a",
+    "background_color": "#11FEB7",
     "display": "standalone"
 }

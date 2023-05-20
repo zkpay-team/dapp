@@ -74,7 +74,7 @@ function ProposalItem({ proposal }: { proposal: IProposal }) {
           service.status === ServiceStatusEnum.Opened && (
             <div className='flex flex-row gap-4 items-center border-t border-gray-100 pt-4'>
               <Link
-                className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg'
+                className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded'
                 href={`/services/${service.id}/proposal`}>
                 Edit proposal
               </Link>

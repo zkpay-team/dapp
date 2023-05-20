@@ -57,7 +57,7 @@ function UserServiceItem({ user, service }: { user: IUser; service: IService }) 
             </p>
           )}
           <Link
-            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg relative'
+            className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded relative'
             href={`/services/${service.id}`}>
             Show details
             {isBuyer && service.status == ServiceStatusEnum.Opened && (

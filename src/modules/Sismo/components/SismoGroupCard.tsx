@@ -53,7 +53,7 @@ function SismoGroupCard({
                 sismoGroupData.userInGroup
                   ? 'text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white'
                   : 'text-gray-400 bg-gray-200 pointer-events-none'
-              } px-5 py-2 rounded-lg`}
+              } px-5 py-2 rounded`}
               href={sismoGroupData.link}>
               Mint Badge
             </a>

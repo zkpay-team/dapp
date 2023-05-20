@@ -91,7 +91,7 @@ function UserLensFeed({ lensUser }: IProps) {
         <a
           href={`https://lenster.xyz/u/${lensUser.handle}`}
           target='_blank'
-          className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded-lg active'>
+          className='text-zinc-600 bg-zinc-50 hover:bg-zinc-500 hover:text-white px-5 py-2 rounded active'>
           More posts
         </a>
       </div>

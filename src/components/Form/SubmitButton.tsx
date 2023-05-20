@@ -17,7 +17,7 @@ function SubmitButton({
         <button
           disabled
           type='submit'
-          className='py-2 px-5 mr-2 text-gray-900 bg-white rounded-lg border border-greeny hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 inline-flex items-center'>
+          className='py-2 px-5 mr-2 text-gray-900 bg-white rounded border border-greeny hover:bg-gray-100 hover:text-blue-700 focus:z-10 focus:ring-2 focus:ring-blue-700 focus:text-blue-700 inline-flex items-center'>
           <svg
             role='status'
             className='inline mr-2 w-4 h-4 text-gray-200 animate-spin '
@@ -38,7 +38,7 @@ function SubmitButton({
       ) : isConnected ? (
         <button
           type='submit'
-          className='grow px-5 py-2 border border-greeny rounded   hover:bg-endnight text-white bg-midnight'>
+          className='grow px-5 py-2 rounded bg-greeny text-midnight hover:bg-endnight hover:text-white '>
           {label}
         </button>
       ) : (
@@ -47,7 +47,7 @@ function SubmitButton({
             openConnectModal();
           }}
           type='button'
-          className='grow px-5 py-2 border border-greeny rounded   hover:bg-midnight text-white bg-midnight'>
+          className='grow px-5 py-2 rounded bg-greeny text-midnight hover:bg-midnight hover:text-white '>
           {'Connect first'}
         </button>
       )}

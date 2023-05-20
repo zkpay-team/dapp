@@ -3,6 +3,8 @@ import * as Yup from 'yup';
 import SubmitButton from '../../../components/Form/SubmitButton';
 import { tokens } from './TokenList';
 import { toast } from 'react-toastify';
+import { useContext } from 'react';
+import RailgunContext from '../context/railgun';
 
 interface IFormValues {
   token: string;
@@ -15,6 +17,12 @@ const initialValues: IFormValues = {
 };
 
 function ReceiveForm() {
+  const { wallet } = useContext(RailgunContext);
+
+  if (!wallet?.railgunWalletInfo) {
+    return null;
+  }
+
   const validationSchema = Yup.object({
     token: Yup.string().required('Please select a token'),
     amount: Yup.number().required('Please provide an amount'),
@@ -22,7 +30,7 @@ function ReceiveForm() {
 
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
     console.log(values);
-    const text = `https://zkpay.herokuapp.com?token=${values.token}&amount=${values.amount}`;
+    const text = `https://zkpay.herokuapp.com/send?to=${wallet.railgunWalletInfo?.railgunAddress}&token=${values.token}&amount=${values.amount}`;
     navigator.clipboard.writeText(text);
     toast('Share link copied', {
       position: 'bottom-right',
@@ -59,13 +67,7 @@ function ReceiveForm() {
                   id='token'
                   name='token'
                   className='mt-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
-                  placeholder=''
-                  // onChange={(e: { target: { value: string } }) => {
-                  //   const token = tokens.find(token => token.address === e.target.value);
-                  //   setSelectedToken(token);
-                  //   setFieldValue('token', e.target.value);
-                  // }}
-                >
+                  placeholder=''>
                   <option value=''>Token</option>
                   {tokens.map((token, index) => (
                     <option key={index} value={token.address}>

@@ -215,7 +215,7 @@ function ServiceForm() {
                   component='select'
                   id='rateToken'
                   name='rateToken'
-                  className='mt-1 block w-full rounded border-gray-300 shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
+                  className='mt-1 mb-1 block w-full rounded border border-gray-200 bg-endnight shadow-sm focus:border-zinc-300 focus:ring focus:ring-zinc-200 focus:ring-opacity-50'
                   placeholder=''
                   onChange={(e: { target: { value: string } }) => {
                     const token = allowedTokenList.find(token => token.address === e.target.value);
