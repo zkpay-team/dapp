@@ -16,7 +16,7 @@ export const tokens: Token[] = [
     name: 'Dai',
     code: 'DAI',
     logo: 'https://app.railway.xyz/static/media/DAI.c5fb9e18b42bfe440070.png',
-    decimals: 6,
+    decimals: 18,
     address: '0xdc31ee1784292379fbb2964b3b9c4124d8f89c60',
   },
   {
