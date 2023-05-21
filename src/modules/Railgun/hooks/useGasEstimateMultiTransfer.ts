@@ -9,7 +9,6 @@ import {
   EVMGasType,
 } from '@railgun-community/shared-models';
 import { useSigner } from 'wagmi';
-import { erc20AmountRecipients } from '../context/railgun';
 
 type UseGasEstimateMultiTransferParams = {
   railgunAddresses: string[];
