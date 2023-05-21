@@ -1,12 +1,11 @@
 import { ErrorMessage, Field, Form, Formik } from 'formik';
+import { QRCodeSVG } from 'qrcode.react';
+import { useContext } from 'react';
+import { toast } from 'react-toastify';
 import * as Yup from 'yup';
 import SubmitButton from '../../../components/Form/SubmitButton';
-import { tokens } from './TokenList';
-import { toast } from 'react-toastify';
-import { useContext } from 'react';
 import RailgunContext from '../context/railgun';
-import Image from 'next/image';
-import { QRCodeSVG } from 'qrcode.react';
+import { tokens } from './TokenList';
 
 interface IFormValues {
   token: string;

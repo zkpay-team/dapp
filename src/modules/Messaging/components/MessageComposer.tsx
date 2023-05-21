@@ -23,7 +23,7 @@ const MessageComposer = ({
     return (
       !sendingPending && (
         <button
-          className='bg-zinc-500 hover:bg-midnight text-white font-bold py-2 px-4 rounded -ml-2'
+          className='bg-endnight hover:bg-greeny text-white font-bold py-2 px-4 -ml-2'
           onClick={sendNewMessage}
           disabled={!peerUserExists || !peerUserExistsOnTalentLayer}>
           Send
