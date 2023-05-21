@@ -1,5 +1,5 @@
 import react, { useCallback, useEffect, useState } from 'react';
-import { Chain, useAccount, useSigner } from 'wagmi';
+import { Chain, useAccount, useProvider, useSigner } from 'wagmi';
 
 import {
   getProver,
@@ -22,6 +22,7 @@ import {
   TransactionGasDetailsSerialized,
   EVMGasType,
   LoadRailgunWalletResponse,
+  deserializeTransaction,
 } from '@railgun-community/shared-models';
 import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
 import { BigNumber, ethers } from 'ethers';
@@ -50,6 +51,7 @@ interface localStoreWallet {
   createPopulateProvedTransfer: (gasEstimate: BigNumber | null) => Promise<void>;
   serializedTransaction: string | undefined;
   executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
+  executeChainOfFunctions: () => Promise<void>;
 }
 
 export interface Balances {
@@ -70,6 +72,8 @@ const RailgunContext = react.createContext<{
   balances: Balances;
   erc20AmountRecipients?: RailgunERC20AmountRecipient[];
   setErc20AmountRecipients?: (erc20AmountRecipients: RailgunERC20AmountRecipient[]) => void;
+  executeChainOfFunctions?: () => Promise<void>;
+  isPaid?: boolean;
 }>({
   isProviderLoaded: false,
   balances: {},
@@ -113,6 +117,10 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   const [estimateError, setEstimateError] = useState<string | null>(null);
 
   const { data: signer } = useSigner({
+    chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
+  });
+
+  const provider = useProvider({
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
 
@@ -371,10 +379,186 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   // =================== END POPULATE PROOF ===================
 
   // =================== START EXECUTE TRANSACTION ===================
+  const executeSendTransaction = useCallback(
+    async (serializedTransaction: string | undefined) => {
+      console.log('entered executeSendTransaction');
+      try {
+        if (!serializedTransaction) {
+          console.error('Missing serializedTransaction.');
+          return;
+        }
+        if (!provider) {
+          console.error('Missing provider.');
+          return;
+        }
+        if (!signer) {
+          console.error('Missing signer.');
+          return;
+        }
 
-  const executeSendTransaction = useExecuteTransaction();
+        const address = await signer.getAddress();
+        const nonce = await provider.getTransactionCount(address, 'pending');
+
+        // Deserialize the transaction
+        const transactionReq = deserializeTransaction(serializedTransaction, nonce, 5);
+        console.log('🚀 ~ file: useExecuteTransaction.ts:36 ~ transactionReq:', transactionReq);
+
+        transactionReq.from = await signer.getAddress();
+
+        console.log('await signer.getAddress()', await signer.getAddress());
+
+        // Send the transaction
+        let txResponse;
+        try {
+          txResponse = await signer.sendTransaction(transactionReq);
+        } catch (error) {
+          console.log('Error sending transaction:', error);
+        }
+
+        // Wait for the transaction to be mined
+        if (!txResponse) {
+          console.error('Missing txResponse.');
+          return;
+        }
+
+        console.log('waiting...');
+        const receipt = await txResponse.wait();
+
+        console.log('Transaction successfully mined:', receipt);
+      } catch (err) {
+        console.error('Error sending transaction:', err);
+      }
+    },
+    [signer, provider],
+  );
+
+  // const executeSendTransaction = useExecuteTransaction();
 
   // =================== END EXECUTE TRANSACTION ===================
+
+  // =================== START CHAIN OF FUNCTIONS ===================
+
+  const [proofCreated, setProofCreated] = useState<boolean>(false);
+  const executeChainOfFunctions = useCallback(async () => {
+    try {
+      console.log('Get the gas estimate!');
+      console.log('should call function exposed from context.');
+      console.log('this: ', { fetchGasEstimate });
+      if (fetchGasEstimate) {
+        console.log("it exists, let's call it.");
+        await fetchGasEstimate();
+      }
+
+      console.log('create the Proof');
+      console.log('should call function exposed from context.');
+      console.log('this: ', { executeGenerateTransferProof });
+      if (executeGenerateTransferProof) {
+        console.log("it exists, let's call it.");
+        await executeGenerateTransferProof();
+      }
+
+      // Wait for the executeTransferProof extra
+      // await new Promise(resolve => setTimeout(resolve, 4000));
+
+      console.log('proof created');
+      setProofCreated(true);
+
+      // console.log('create the Populated Transaction');
+      // console.log('should call function exposed from context.');
+      // console.log('this: ', { executeGenerateTransferProof });
+      // if (!gasEstimate) {
+      //   console.log('no gas estimate, so we cannot create the populated transaction.');
+      //   return;
+      // }
+      // if (createPopulateProvedTransfer) {
+      //   console.log("it exists, let's call it.");
+      //   await createPopulateProvedTransfer(gasEstimate);
+      // } else {
+      //   console.log("createPopulateProvedTransfer doesn't exist, so we can't call it.");
+      // }
+
+      // // Wait for the createPopulateProvedTransfer extra
+      // await new Promise(resolve => setTimeout(resolve, 10000));
+
+      // console.log('run the executeSendTransaction');
+      // console.log('should call function exposed from context.');
+      // console.log('this: ', { executeSendTransaction });
+
+      // console.log('serializedTransaction: ', serializedTransaction);
+
+      // if (executeSendTransaction && serializedTransaction) {
+      //   console.log("it exists, let's call it.");
+      //   await executeSendTransaction(serializedTransaction);
+      // } else {
+      //   console.log("executeSendTransaction doesn't exist, so we can't call it.");
+      // }
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, [
+    fetchGasEstimate,
+    executeGenerateTransferProof,
+    gasEstimate,
+    createPopulateProvedTransfer,
+    serializedTransaction,
+    executeSendTransaction,
+  ]);
+
+  const [isPaid, setIsPaid] = useState<boolean>(false);
+  useEffect(() => {
+    const asyncCallSendAfterProving = async () => {
+      if (!proofCreated) {
+        console.log('proof not created yet');
+        return;
+      }
+
+      try {
+        console.log('create the Populated Transaction');
+        console.log('should call function exposed from context.');
+        console.log('this: ', { executeGenerateTransferProof });
+        if (!gasEstimate) {
+          console.log('no gas estimate, so we cannot create the populated transaction.');
+          return;
+        }
+        if (createPopulateProvedTransfer) {
+          console.log("it exists, let's call it.");
+          await createPopulateProvedTransfer(gasEstimate);
+        } else {
+          console.log("createPopulateProvedTransfer doesn't exist, so we can't call it.");
+        }
+
+        // Wait for the createPopulateProvedTransfer extra
+        // await new Promise(resolve => setTimeout(resolve, 10000));
+
+        console.log('run the executeSendTransaction');
+        console.log('should call function exposed from context.');
+        console.log('this: ', { executeSendTransaction });
+
+        console.log('serializedTransaction: ', serializedTransaction);
+
+        if (executeSendTransaction && serializedTransaction) {
+          console.log("it exists, let's call it.");
+          await executeSendTransaction(serializedTransaction);
+          setIsPaid(true);
+          setProofCreated(false);
+        } else {
+          console.log("executeSendTransaction doesn't exist, so we can't call it.");
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+    };
+    asyncCallSendAfterProving();
+  }, [
+    fetchGasEstimate,
+    executeGenerateTransferProof,
+    gasEstimate,
+    createPopulateProvedTransfer,
+    proofCreated,
+    serializedTransaction,
+  ]);
+
+  // =================== END CHAIN OF FUNCTIONS ===================
 
   react.useEffect(() => {
     const fn = async () => {
@@ -511,6 +695,8 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       serializedTransaction,
       erc20AmountRecipients,
       setErc20AmountRecipients,
+      executeChainOfFunctions,
+      isPaid,
     };
   }, [
     account.address,
@@ -525,6 +711,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     balances,
     erc20AmountRecipients,
     setErc20AmountRecipients,
+    isPaid,
   ]);
 
   return <RailgunContext.Provider value={value}>{children}</RailgunContext.Provider>;
