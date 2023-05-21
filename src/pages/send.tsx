@@ -14,18 +14,8 @@ function Send() {
     createPopulateProvedTransfer,
     serializedTransaction,
     executeSendTransaction,
+    executeChainOfFunctions,
   } = useContext(RailgunContext);
-
-  const createProof = useCallback(() => {
-    console.log('create the Proof');
-    console.log('should call function exposed from context.');
-    console.log('this: ', { executeGenerateTransferProof });
-    if (executeGenerateTransferProof) {
-      console.log("it exists, let's call it.");
-      executeGenerateTransferProof();
-    }
-    return;
-  }, [executeGenerateTransferProof]);
 
   const callGasEstimate = useCallback(() => {
     console.log('Get the gas esimate!');
@@ -37,6 +27,17 @@ function Send() {
     }
     return;
   }, [fetchGasEstimate]);
+
+  const createProof = useCallback(() => {
+    console.log('create the Proof');
+    console.log('should call function exposed from context.');
+    console.log('this: ', { executeGenerateTransferProof });
+    if (executeGenerateTransferProof) {
+      console.log("it exists, let's call it.");
+      executeGenerateTransferProof();
+    }
+    return;
+  }, [executeGenerateTransferProof]);
 
   const createPopulatedTx = useCallback(() => {
     console.log('create the Populated Transaction');
@@ -71,6 +72,19 @@ function Send() {
     return;
   }, [serializedTransaction, executeSendTransaction]);
 
+  // const callExecuteChainOfFunctions = useCallback(() => {
+  //   console.log('run the executeChainOfFunctions');
+  //   console.log('should call function exposed from context.');
+  //   console.log('this: ', { executeChainOfFunctions });
+  //   if (executeChainOfFunctions) {
+  //     console.log("it exists, let's call it.");
+  //     executeChainOfFunctions();
+  //   } else {
+  //     console.log("executeChainOfFunctions doesn't exist, so we can't call it.");
+  //   }
+  //   return;
+  // }, [executeChainOfFunctions, serializedTransaction, gasEstimate]);
+
   if (!account?.isConnected || !wallet?.railgunWalletInfo) {
     return <Steps />;
   }
@@ -85,7 +99,13 @@ function Send() {
       </div>
 
       <hr />
-      <p>DEBUGG</p>
+      {/* <p>DEBUGG</p>
+      <button
+        type='button'
+        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
+        onClick={callGasEstimate}>
+        Get Gas Estimate.
+      </button>
       <button
         type='button'
         className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
@@ -100,19 +120,26 @@ function Send() {
       </button>
       <button
         type='button'
-        className='hover:text-green-600 hover:bg-green-50 bg-green-500 text-white px-5 py-2 rounded-lg'
-        onClick={callGasEstimate}>
-        Get Gas Estimate.
-      </button>
-      <button
-        type='button'
         className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
         onClick={() => {
           runExecuteSendTransaction();
         }}>
         Send Transactions
+      </button> */}
+      {/* <button
+        type='button'
+        className='hover:bg-endnight hover:text-white bg-greeny text-midnight px-5 py-2 rounded'
+        onClick={() => {
+          if (!executeChainOfFunctions) {
+            console.log('executeChainOfFunctions does not exist.');
+            return;
+          }
+          // callExecuteChainOfFunctions();
+          executeChainOfFunctions();
+        }}>
+        Chain of functions Execute
       </button>
-      <h1>{serializedTransaction}</h1>
+      <h1>{serializedTransaction}</h1> */}
     </div>
   );
 }

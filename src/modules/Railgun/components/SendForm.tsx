@@ -58,7 +58,13 @@ const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
 };
 
 function SendForm() {
-  const { wallet, erc20AmountRecipients, setErc20AmountRecipients } = useContext(RailgunContext);
+  const {
+    wallet,
+    erc20AmountRecipients,
+    setErc20AmountRecipients,
+    executeChainOfFunctions,
+    isPaid,
+  } = useContext(RailgunContext);
   const router = useRouter();
   const query = router.query;
 
@@ -113,7 +119,7 @@ function SendForm() {
   //   console.log('updatedErc20AmountRecipients', { updatedErc20AmountRecipients });
   //   setErc20AmountRecipients(updatedErc20AmountRecipients);
   // }, [recipients, tokenAddress, recipientAmounts]);
-
+  const [submitted, setSubmitted] = useState(false);
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
     for (let i = values.recipients.length - 1; i >= 0; i--) {
       if (values.recipients[i].to === '') {
@@ -122,7 +128,7 @@ function SendForm() {
     }
     console.log('values', { values });
 
-    toast('Money sended!', {
+    toast('Please Sign!', {
       position: 'bottom-right',
       autoClose: 5000,
       hideProgressBar: false,
@@ -143,8 +149,35 @@ function SendForm() {
       return;
     }
     setErc20AmountRecipients(updatedErc20AmountRecipients);
+    setSubmitted(true);
     resetForm();
   };
+
+  useEffect(() => {
+    if (submitted) {
+      if (!executeChainOfFunctions) {
+        console.log('executeChainOfFunctions does not exist.');
+        return;
+      }
+      executeChainOfFunctions();
+
+      setSubmitted(false);
+    }
+  }, [submitted, executeChainOfFunctions]);
+
+  useEffect(() => {
+    if (isPaid) {
+      toast('Money Send!', {
+        position: 'bottom-right',
+        autoClose: 5000,
+        hideProgressBar: false,
+        closeOnClick: true,
+        pauseOnHover: true,
+        progress: undefined,
+        theme: 'dark',
+      });
+    }
+  }, [isPaid]);
 
   useEffect(() => {
     console.log('logging every update of the erc20AmountRecipients');
