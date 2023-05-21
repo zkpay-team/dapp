@@ -17,7 +17,6 @@ export const loadProviders = async () => {
   const shouldDebug = true;
 
   await loadProvider(ETH_PROVIDERS_JSON_GOERLI, NetworkName.EthereumGoerli, shouldDebug);
-  await loadProvider(ETH_PROVIDERS_JSON_POLYGON, NetworkName.Polygon, shouldDebug);
 
   return;
 };

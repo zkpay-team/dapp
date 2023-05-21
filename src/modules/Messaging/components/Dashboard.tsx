@@ -124,12 +124,14 @@ function Dashboard() {
   return (
     <div className='mx-auto text-gray-900 sm:px-4 lg:px-0'>
       {!providerState?.client && account && (
-        <button
-          type='submit'
-          className='bg-greeny text-midnight font-bold py-2 px-4 rounded'
-          onClick={() => handleXmtpConnect()}>
-          Connect to XMTP
-        </button>
+        <div className='flex items-center justify-center pt-16'>
+          <button
+            type='submit'
+            className='bg-greeny text-midnight font-bold py-2 px-4 rounded'
+            onClick={() => handleXmtpConnect()}>
+            Connect to Messaging
+          </button>
+        </div>
       )}
       {providerState?.client && (
         <div className='-mx-6 -mt-6'>
