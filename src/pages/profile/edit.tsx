@@ -12,7 +12,7 @@ function EditProfile() {
         Edit your <span className='text-gray-100'>Profile</span>
       </p>
 
-      <Steps targetTitle={'Edit your profile'} />
+      <Steps />
 
       {account?.isConnected && user && <ProfileForm />}
     </div>

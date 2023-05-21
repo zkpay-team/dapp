@@ -17,7 +17,7 @@ function Dashboard() {
         Your <span className='text-gray-100'>dashboard</span>
       </p>
 
-      <Steps targetTitle={'Access your dashboard'} />
+      <Steps />
 
       {account?.isConnected && user && (
         <div>

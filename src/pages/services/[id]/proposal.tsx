@@ -42,7 +42,7 @@ function CreateOrEditProposal() {
         </p>
       )}
 
-      <Steps targetTitle={'Filled the proposal form'} />
+      <Steps />
 
       {!userExists() && account?.isConnected && user && (
         <div className='border border-greeny rounded p-8'>

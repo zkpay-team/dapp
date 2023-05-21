@@ -1,8 +1,11 @@
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useContext, useEffect, useState } from 'react';
 import { Group } from '../../modules/Railgun/components/GroupForm';
+import RailgunContext from '../../modules/Railgun/context/railgun';
+import Steps from '../../components/Steps';
 
 function Groups() {
+  const { wallet, account } = useContext(RailgunContext);
   const router = useRouter();
   const [groups, setGroups] = useState<Group[]>([]);
 
@@ -12,6 +15,10 @@ function Groups() {
       : [];
     setGroups(localstorageGroups);
   }, []);
+
+  if (!account?.isConnected || !wallet?.railgunWalletInfo) {
+    return <Steps />;
+  }
 
   return (
     <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>

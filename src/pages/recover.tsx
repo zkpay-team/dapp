@@ -1,5 +1,13 @@
+import { useContext } from 'react';
+import RailgunContext from '../modules/Railgun/context/railgun';
+import Steps from '../components/Steps';
+
 function Recover() {
-  console.log('Recover');
+  const { wallet, account } = useContext(RailgunContext);
+
+  if (!account?.isConnected || !wallet?.railgunWalletInfo) {
+    return <Steps />;
+  }
 
   return (
     <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>

@@ -14,9 +14,10 @@ import { NON_EXISTING_XMTP_USER_ERROR_MESSAGE } from '../hooks/useStreamMessages
 import Steps from '../../../components/Steps';
 import { useRouter } from 'next/router';
 import { ChatMessageStatus, XmtpChatMessage } from '../utils/types';
+import RailgunContext from '../../Railgun/context/railgun';
 
 function Dashboard() {
-  const { user, account } = useContext(TalentLayerContext);
+  const { wallet, account } = useContext(RailgunContext);
   const { data: signer } = useSigner({
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
@@ -116,8 +117,8 @@ function Dashboard() {
 
   console.log('Messaging', { account });
 
-  if (!account?.isConnected) {
-    return <Steps targetTitle={'Access messaging'} />;
+  if (!account?.isConnected || !wallet?.railgunWalletInfo) {
+    return <Steps />;
   }
 
   return (

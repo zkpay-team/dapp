@@ -1,9 +1,10 @@
 import { useCallback, useContext } from 'react';
 import RailgunContext from '../modules/Railgun/context/railgun';
 import SendForm from '../modules/Railgun/components/SendForm';
+import Steps from '../components/Steps';
 
 function Send() {
-  const { account } = useContext(RailgunContext);
+  const { wallet, account } = useContext(RailgunContext);
   console.log({ account });
 
   const {
@@ -69,6 +70,10 @@ function Send() {
     }
     return;
   }, [serializedTransaction, executeSendTransaction]);
+
+  if (!account?.isConnected || !wallet?.railgunWalletInfo) {
+    return <Steps />;
+  }
 
   return (
     <div className='max-w-7xl mx-auto text-gray-200 sm:px-4 lg:px-0'>

@@ -19,6 +19,7 @@ import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
 import { usePopulateProvedTransfer } from '../hooks/usePopulateProvedTransfer';
 import { BigNumber } from 'ethers';
 import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
+import { toast } from 'react-toastify';
 
 const tokenAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'.toLowerCase();
 
@@ -222,8 +223,6 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       mnemonic,
       creationBlockNumberMap,
     );
-    console.log('setting the wallet');
-    console.log({ railgunWallet });
     setWallet(railgunWallet);
     localStorage.setItem(
       'wallet',
@@ -232,6 +231,16 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
         ...railgunWallet,
       }),
     );
+
+    toast('New wallet created!', {
+      position: 'bottom-right',
+      autoClose: 5000,
+      hideProgressBar: false,
+      closeOnClick: true,
+      pauseOnHover: true,
+      progress: undefined,
+      theme: 'dark',
+    });
   }, []);
 
   react.useEffect(() => {

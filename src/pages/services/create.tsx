@@ -15,7 +15,7 @@ function CreateService() {
         Post <span className='text-gray-100'>a job</span>
       </p>
 
-      <Steps targetTitle={'Fill the job form'} />
+      <Steps />
 
       {!userExists() && account?.isConnected && user && (
         <div className='border border-greeny rounded p-8'>

@@ -2,7 +2,8 @@ import { ConnectButton } from '@web3modal/react';
 
 function ConnectBlock() {
   return (
-    <div className='border border-greeny rounded p-8'>
+    <div className='p-8 flex flex-col items-center'>
+      <p className='p-2'>Connect your daily wallet</p>
       <ConnectButton />
     </div>
   );
