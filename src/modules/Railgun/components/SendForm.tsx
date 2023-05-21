@@ -3,7 +3,7 @@ import * as Yup from 'yup';
 import SubmitButton from '../../../components/Form/SubmitButton';
 import { tokens } from './TokenList';
 import { toast } from 'react-toastify';
-import { useContext } from 'react';
+import { SetStateAction, use, useCallback, useContext, useEffect, useState } from 'react';
 import RailgunContext from '../context/railgun';
 import { useRouter } from 'next/router';
 import { ParsedUrlQuery } from 'querystring';
@@ -58,7 +58,7 @@ const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
 };
 
 function SendForm() {
-  const { wallet } = useContext(RailgunContext);
+  const { wallet, erc20AmountRecipients, setErc20AmountRecipients } = useContext(RailgunContext);
   const router = useRouter();
   const query = router.query;
 
@@ -72,10 +72,55 @@ function SendForm() {
     token: Yup.string().required('Please select a token'),
   });
 
-  const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
-    console.log('values', { values });
+  // const [recipients, setRecipients] = useState<string[]>([]);
+  // const [recipientAmounts, setRecipientAmounts] = useState<number[]>([]);
+  // const [tokenAddress, setTokenAddress] = useState<string>('');
 
-    // TODO: format values (remove empty row)
+  // useEffect(() => {
+  //   console.log("logging every update of the 'recipients' state");
+  //   console.log({ recipients });
+  // }, [recipients]);
+
+  // useEffect(() => {
+  //   console.log("logging every update of the 'recipientAmounts' state");
+  //   console.log({ recipientAmounts });
+  // }, [recipientAmounts]);
+
+  // useEffect(() => {
+  //   console.log("logging every update of the 'tokenAddress' state");
+  //   console.log({ tokenAddress });
+  // }, [tokenAddress]);
+
+  // const updateErc20AmountRecipients = useCallback(() => {
+  //   if (!recipients) {
+  //     console.error('recipients not found');
+  //     return;
+  //   }
+
+  //   const updatedErc20AmountRecipients = recipients.map((recipient, index) => {
+  //     console.log('first recipient', recipient);
+  //     return {
+  //       tokenAddress: tokenAddress,
+  //       amountString: recipientAmounts[index]?.toString(),
+  //       recipientAddress: recipient,
+  //     };
+  //   });
+  //   console.log('setErc20AmountRecipients', { setErc20AmountRecipients });
+  //   if (!setErc20AmountRecipients) {
+  //     console.error('setErc20AmountRecipients not found');
+  //     return;
+  //   }
+  //   console.log('updatedErc20AmountRecipients', { updatedErc20AmountRecipients });
+  //   setErc20AmountRecipients(updatedErc20AmountRecipients);
+  // }, [recipients, tokenAddress, recipientAmounts]);
+
+  const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
+    for (let i = values.recipients.length - 1; i >= 0; i--) {
+      if (values.recipients[i].to === '') {
+        values.recipients.splice(i, 1);
+      }
+    }
+    console.log('values', { values });
 
     toast('Money sended!', {
       position: 'bottom-right',
@@ -86,12 +131,29 @@ function SendForm() {
       progress: undefined,
       theme: 'dark',
     });
+    const updatedErc20AmountRecipients = values.recipients.map((recipient, index) => {
+      return {
+        tokenAddress: values.token,
+        amountString: recipient.amount?.toString(),
+        recipientAddress: recipient.to,
+      };
+    });
+    if (!setErc20AmountRecipients) {
+      console.error('setErc20AmountRecipients not found');
+      return;
+    }
+    setErc20AmountRecipients(updatedErc20AmountRecipients);
     resetForm();
   };
 
+  useEffect(() => {
+    console.log('logging every update of the erc20AmountRecipients');
+    console.log({ erc20AmountRecipients });
+  }, [erc20AmountRecipients]);
+
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({ isSubmitting, values }) => (
+      {({ isSubmitting, values, setFieldValue }) => (
         <Form>
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>
@@ -109,6 +171,7 @@ function SendForm() {
                   </option>
                 ))}
               </Field>
+
               <p>
                 <span className='text-red-500'>
                   <ErrorMessage name='token' />
