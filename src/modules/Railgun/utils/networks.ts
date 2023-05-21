@@ -12,7 +12,7 @@ export const ETH_PROVIDERS_JSON_GOERLI: FallbackProviderJsonConfig = {
 };
 
 export const ETH_PROVIDERS_JSON_POLYGON: FallbackProviderJsonConfig = {
-  chainId: 5,
+  chainId: 137,
   providers: [
     {
       provider: `https://polygon-mainnet.g.alchemy.com/v2/${process.env.NEXT_PUBLIC_ALCHEMY_API_KEY_GOERLI}`,

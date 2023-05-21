@@ -139,7 +139,7 @@ function Dashboard() {
           <div className='flex flex-row'>
             <div
               style={{ overflowAnchor: 'revert' }}
-              className='basis-1/4 h-[calc(100vh-192px)] sm:h-[calc(100vh-128px)] flex-no-wrap flex-none overflow-y-auto border-r'>
+              className='basis-1/4 h-[calc(100vh-196px)] sm:h-[calc(100vh-128px)] flex-no-wrap flex-none overflow-y-auto border-r'>
               <ConversationList
                 conversationMessages={providerState.conversationMessages}
                 selectedConversationPeerAddress={selectedConversationPeerAddress}
@@ -147,7 +147,7 @@ function Dashboard() {
               />
             </div>
             {providerState?.client && selectedConversationPeerAddress && (
-              <div className='basis-3/4 w-full pl-5 flex flex-col justify-between h-[calc(100vh-192px)] sm:h-[calc(100vh-128px)]'>
+              <div className='basis-3/4 w-full pl-5 flex flex-col justify-between h-[calc(100vh-196px)] sm:h-[calc(100vh-128px)]'>
                 <div className='overflow-y-auto'>
                   <MessageList
                     conversationMessages={

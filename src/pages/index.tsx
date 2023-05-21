@@ -3,8 +3,10 @@ import Steps from '../components/Steps';
 import RailgunAddress from '../modules/Railgun/components/RailgunAddress';
 import TokenList from '../modules/Railgun/components/TokenList';
 import RailgunContext from '../modules/Railgun/context/railgun';
+import { useRouter } from 'next/router';
 
 function Home() {
+  const router = useRouter();
   const { wallet, balances, account } = useContext(RailgunContext);
 
   if (!account?.isConnected || !wallet?.railgunWalletInfo) {
@@ -21,6 +23,13 @@ function Home() {
       <div className='mt-4'>
         <TokenList balances={balances} />
       </div>
+
+      <button
+        type='button'
+        className='mt-4 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
+        onClick={() => router.push('/deposit')}>
+        Deposit
+      </button>
     </div>
   );
 }

@@ -1,10 +1,8 @@
 import { Dialog, Transition } from '@headlessui/react';
 import { XMarkIcon } from '@heroicons/react/24/outline';
 import { Fragment, ReactNode, useState } from 'react';
-import { useAccount } from 'wagmi';
 import Logo from '../components/Layout/Logo';
 import MenuBottom from '../components/Layout/MenuBottom';
-import SideBottom from '../components/Layout/SideBottom';
 import SideMenu from '../components/Layout/SideMenu';
 import NetworkSwitch from '../components/NetworkSwitch';
 import UserAccount from '../components/UserAccount';
@@ -15,7 +13,6 @@ interface ContainerProps {
 }
 
 function Layout({ children, className }: ContainerProps) {
-  const account = useAccount();
   const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // if (!account.isConnected) {
@@ -94,7 +91,6 @@ function Layout({ children, className }: ContainerProps) {
             </div>
             <div className='mt-5 flex flex-1 flex-col justify-between'>
               <SideMenu />
-              <SideBottom />
             </div>
           </div>
         </div>

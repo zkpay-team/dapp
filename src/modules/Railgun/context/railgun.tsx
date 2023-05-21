@@ -24,12 +24,9 @@ import {
   LoadRailgunWalletResponse,
 } from '@railgun-community/shared-models';
 import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
-import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
-import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
-import { usePopulateProvedTransfer } from '../hooks/usePopulateProvedTransfer';
 import { BigNumber, ethers } from 'ethers';
-import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 import { toast } from 'react-toastify';
+import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 
 const tokenAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'.toLowerCase();
 
