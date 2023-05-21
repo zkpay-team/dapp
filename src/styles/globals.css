@@ -48,5 +48,5 @@ body .Toastify__progress-bar-theme--dark{
 }
 
 body .menuBottom{
-    padding-bottom: env(safe-area-inset-bottom, 20px)
+    margin-bottom: env(safe-area-inset-bottom, 20px)
 }
