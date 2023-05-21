@@ -98,7 +98,7 @@ function ReceiveForm() {
             </div>
           </div>
           <div>
-            <p className='py-8 block text-center'>or scan it</p>
+            <p className='py-4 block text-center'>or scan it</p>
             <div className='flex justify-center'>
               <QRCodeSVG
                 value={generateLink(values)}
