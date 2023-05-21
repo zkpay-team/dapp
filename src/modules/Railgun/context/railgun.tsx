@@ -1,5 +1,5 @@
-import react, { useEffect } from 'react';
-import { Chain, useAccount } from 'wagmi';
+import react, { useCallback, useEffect, useState } from 'react';
+import { Chain, useAccount, useSigner } from 'wagmi';
 
 import {
   getProver,
@@ -8,37 +8,32 @@ import {
   loadWalletByID,
   setOnBalanceUpdateCallback,
   BalancesUpdatedCallback,
+  gasEstimateForUnprovenTransfer,
+  generateTransferProof,
+  populateProvedTransfer,
 } from '@railgun-community/quickstart';
 import { IAccount } from '../../../types';
 import { initializeRailgun, loadProviders } from '../utils/setup';
-import { LoadRailgunWalletResponse } from '@railgun-community/shared-models';
+
+import {
+  NetworkName,
+  FeeTokenDetails,
+  RailgunERC20AmountRecipient,
+  TransactionGasDetailsSerialized,
+  EVMGasType,
+  LoadRailgunWalletResponse,
+} from '@railgun-community/shared-models';
 import { entropyToMnemonic, randomBytes } from 'ethers/lib/utils';
-import { NetworkName, RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 import { useGasEstimateMultiTransfer } from '../hooks/useGasEstimateMultiTransfer';
 import { useGenerateTransferProof } from '../hooks/useGenerateTransferProof';
 import { usePopulateProvedTransfer } from '../hooks/usePopulateProvedTransfer';
-import { BigNumber } from 'ethers';
+import { BigNumber, ethers } from 'ethers';
 import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 import { toast } from 'react-toastify';
 
 const tokenAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'.toLowerCase();
 
-export const erc20AmountRecipients: RailgunERC20AmountRecipient[] = [
-  {
-    tokenAddress, // GOERLI DAI
-    amountString: '100', // hexadecimal amount decimal meaning 16
-    // recipientAddress: railgunAddresses[0],
-    recipientAddress:
-      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
-  },
-  {
-    tokenAddress, // GOERLI DAI
-    amountString: '100', // hexadecimal amount decimal meaning 16
-    // recipientAddress: railgunAddresses[1],
-    recipientAddress:
-      '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
-  },
-];
+// export const erc20AmountRecipients: RailgunERC20AmountRecipient[] = ;
 
 declare global {
   interface Window {
@@ -76,6 +71,8 @@ const RailgunContext = react.createContext<{
   serializedTransaction?: string;
   executeSendTransaction: (serializedTransaction: string | undefined) => Promise<void>;
   balances: Balances;
+  erc20AmountRecipients?: RailgunERC20AmountRecipient[];
+  setErc20AmountRecipients?: (erc20AmountRecipients: RailgunERC20AmountRecipient[]) => void;
 }>({
   isProviderLoaded: false,
   balances: {},
@@ -87,52 +84,187 @@ const RailgunContext = react.createContext<{
 const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   const account = useAccount();
   const [isProviderLoaded, setProviderLoaded] = react.useState<boolean>(false);
-  const [wallet, setWallet] = react.useState<LoadRailgunWalletResponse>();
+  const [railgunWallet, setRailgunWallet] = react.useState<LoadRailgunWalletResponse>();
   const [balances, setBalances] = react.useState<Balances>({});
 
+  const [erc20AmountRecipients, setErc20AmountRecipients] = react.useState<
+    RailgunERC20AmountRecipient[]
+  >([
+    {
+      tokenAddress, // GOERLI DAI
+      amountString: '100', // hexadecimal amount decimal meaning 16
+      recipientAddress:
+        '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+    },
+    {
+      tokenAddress, // GOERLI DAI
+      amountString: '100', // hexadecimal amount decimal meaning 16
+      recipientAddress:
+        '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
+    },
+  ]);
+
   react.useEffect(() => {
-    console.log('wallet?.railgunWalletInfo?.id ', wallet?.railgunWalletInfo?.id);
-  }, [wallet?.railgunWalletInfo?.id, wallet, wallet?.railgunWalletInfo]);
+    console.log('wallet?.railgunWalletInfo?.id ', railgunWallet?.railgunWalletInfo?.id);
+  }, [railgunWallet?.railgunWalletInfo?.id, railgunWallet, railgunWallet?.railgunWalletInfo]);
 
   console.log('RailgunProvider', { isProviderLoaded });
 
-  const { gasEstimate, estimateError, fetchGasEstimate } = useGasEstimateMultiTransfer({
-    railgunAddresses: [
-      '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
-      '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
-    ],
-    railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-    selectedTokenFeeAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', //goerli dai
-    selectedRelayer: {
-      feePerUnitGas: '0',
-    },
+  // =================== START GAS ESTIMATE ===================
+
+  const [gasEstimate, setGasEstimate] = useState<BigNumber | null>(null);
+  const [estimateError, setEstimateError] = useState<string | null>(null);
+
+  const { data: signer } = useSigner({
+    chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
+
+  const fetchGasEstimate = useCallback(async () => {
+    const wallet: string | null = localStorage.getItem('wallet');
+
+    if (wallet === null) {
+      console.error("No 'wallet' object in local storage.");
+      return;
+    }
+
+    const walletObject: { encryptionKey?: string } = JSON.parse(wallet);
+
+    if (!('encryptionKey' in walletObject)) {
+      console.error('encryptionKey does not exist in the wallet object.');
+      return;
+    }
+
+    const encryptionKey: string = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
+
+    const memoText = 'Getting the salariess! 🍝😋';
+    const feeData = await signer?.getFeeData();
+    console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
+    const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
+    console.log('gasPrice', gasPrice);
+
+    const originalGasDetailsSerialized: TransactionGasDetailsSerialized = {
+      evmGasType: EVMGasType.Type2,
+      gasEstimateString: '0x00',
+      maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
+      maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+      // gasPriceString: gasPrice,
+    };
+
+    const selectedTokenFeeAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'; //goerli dai
+    const selectedRelayer = {
+      feePerUnitGas: '0',
+    };
+    const feeTokenDetails: FeeTokenDetails = {
+      tokenAddress: selectedTokenFeeAddress,
+      feePerUnitGas: selectedRelayer.feePerUnitGas,
+    };
+
+    const sendWithPublicWallet = true;
+
+    const railgunWalletID = railgunWallet?.railgunWalletInfo?.id || '0xnoWalletIDFound';
+
+    console.log('erc20AmountRecipients showing before estimating', erc20AmountRecipients);
+    const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
+      NetworkName.EthereumGoerli,
+      railgunWalletID,
+      encryptionKey,
+      memoText,
+      erc20AmountRecipients,
+      [], // nftAmountRecipients
+      originalGasDetailsSerialized,
+      feeTokenDetails,
+      sendWithPublicWallet,
+    );
+
+    if (error) {
+      setEstimateError(error);
+      return;
+    }
+
+    setGasEstimate(BigNumber.from(gasEstimateString));
+  }, [railgunWallet, signer]);
+
+  // const { gasEstimate, estimateError, fetchGasEstimate } = useGasEstimateMultiTransfer({
+  //   railgunAddresses: [
+  //     '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
+  //     '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
+  //   ],
+  //   railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+  //   selectedTokenFeeAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', //goerli dai
+  //   selectedRelayer: {
+  //     feePerUnitGas: '0',
+  //   },
+  // });
 
   react.useEffect(() => {
     console.log('Errrrorrrrrrrrrrrrrrrrr logging error returned from hook: ', { estimateError });
   }, [estimateError]);
 
-  // const tokenAmountRecipients: RailgunERC20AmountRecipient[] = [
-  //   {
-  //     tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-  //     amountString: '0x10', // hexadecimal amount decimal meaning 16
-  //     recipientAddress:
-  //       '0zk1qys0zt254k74g7mqes8r7jvef70f0tmd0fqkjewwx2r899z7tn75nrv7j6fe3z53l7t2husz9nhr80w2tvvq4kyml85j2uenvt83an8j3y0nwvc80xkh2cltfel',
-  //   },
-  //   {
-  //     tokenAddress: '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60', // GOERLI DAI
-  //     amountString: '0x10', // hexadecimal amount decimal meaning 16
-  //     recipientAddress:
-  //       '0zk1qyvlgs4m2q8dnahhzrryjtrku0rev59gvkfa8uf8a2w7am56u3u4nrv7j6fe3z53l7y8lxedn5j7ttxvk2kqcu604kl4h33mfs3xgkagac9evc0kmy9r2fn82n8',
-  //   },
-  // ];
+  // =================== END GAS ESTIMATE ===================
 
-  const { proofError, executeGenerateTransferProof } = useGenerateTransferProof({
-    railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-    tokenAmountRecipients: erc20AmountRecipients,
-    sendWithPublicWallet: true,
-    overallBatchMinGasPrice: '0',
-  });
+  const [proofError, setProofError] = useState<string | null>(null);
+
+  const executeGenerateTransferProof = useCallback(async () => {
+    const wallet: string | null = localStorage.getItem('wallet');
+    if (wallet === null) {
+      console.error("No 'wallet' object in local storage.");
+      return;
+    }
+
+    const walletObject: { encryptionKey?: string } = JSON.parse(wallet);
+
+    if (!('encryptionKey' in walletObject)) {
+      console.error('encryptionKey does not exist in the wallet object.');
+      return;
+    }
+
+    const encryptionKey: string = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
+
+    const memoText = 'Getting the salariess! 🍝😋';
+
+    const progressCallback = (progress: number) => {
+      // Handle proof progress (show in UI).
+      // Proofs can take 20-30 seconds on slower devices.
+      console.log(`Proof generation progress: ${progress}%`);
+    };
+
+    const showSenderAddressToRecipient = true;
+    const sendWithPublicWallet = true;
+    const railgunWalletID = railgunWallet?.railgunWalletInfo?.id || '0xnoWalletIDFound';
+    const overallBatchMinGasPrice = '0';
+    const tokenAmountRecipients = erc20AmountRecipients;
+    console.log('tokenAmountRecipients showing before generating', tokenAmountRecipients);
+    const { error } = await generateTransferProof(
+      NetworkName.EthereumGoerli,
+      railgunWalletID,
+      encryptionKey,
+      showSenderAddressToRecipient,
+      memoText,
+      tokenAmountRecipients,
+      [], // nftAmountRecipients
+      undefined,
+      sendWithPublicWallet,
+      overallBatchMinGasPrice,
+      progressCallback,
+    );
+
+    if (error) {
+      console.log('the error comes from generateTransferProof');
+      console.log('railgunWalletID', railgunWalletID);
+      console.log('encryptionKey', encryptionKey);
+      console.log('tokenAmountRecipients', tokenAmountRecipients);
+
+      console.error(error);
+      setProofError(error);
+    }
+  }, [railgunWallet, erc20AmountRecipients]);
+
+  // const { proofError, executeGenerateTransferProof } = useGenerateTransferProof({
+  //   railgunWalletID: railgunWallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+  //   tokenAmountRecipients: erc20AmountRecipients,
+  //   sendWithPublicWallet: true,
+  //   overallBatchMinGasPrice: '0',
+  // });
 
   useEffect(() => {
     console.log('checking executeGenerateTransferProof: ', executeGenerateTransferProof);
@@ -142,20 +274,110 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     console.log('proofError: ', proofError);
   }, [proofError]);
 
-  // console.log('erc20AmountRecipients: when calling hook', erc20AmountRecipients);
-  const { createPopulateProvedTransfer, transactionError, serializedTransaction } =
-    usePopulateProvedTransfer({
-      railgunWalletID: wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
-      tokenAmountRecipients: erc20AmountRecipients,
-      sendWithPublicWallet: true,
-      overallBatchMinGasPrice: '0',
-    });
+  // =================== END GENERATE PROOF ===================
+
+  // =================== START POPULATE PROOF ===================
+
+  const [transactionError, setTransactionError] = useState<string | null>(null);
+  const [serializedTransaction, setSerializedTransaction] = useState<string | undefined>(undefined);
+
+  const createPopulateProvedTransfer = useCallback(
+    async (gasEstimate: BigNumber | null) => {
+      if (!gasEstimate) {
+        console.error('Missing gasEstimate.');
+        return;
+      }
+
+      const wallet: string | null = localStorage.getItem('wallet');
+      let encryptionKey: string;
+
+      if (wallet !== null) {
+        const walletObject: { encryptionKey?: string } = JSON.parse(wallet);
+
+        if ('encryptionKey' in walletObject) {
+          encryptionKey = walletObject?.encryptionKey ?? 'no-ecryption-key-present';
+        } else {
+          console.error('encryptionKey does not exist in the wallet object.');
+        }
+      } else {
+        console.error("No 'wallet' object in local storage.");
+      }
+      const memoText = 'Getting the salariess! 🍝😋';
+
+      const feeData = await signer?.getFeeData();
+      console.log(
+        '======================= populating Proof with gasEstimateForDeposit =======================',
+      );
+      console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
+
+      console.log('ethers.utils.hexlify(gasEstimate),', ethers.utils.hexlify(gasEstimate));
+      const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
+      console.log('gasPrice', gasPrice);
+
+      const gasDetailsSerialized: TransactionGasDetailsSerialized = {
+        evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0) Goerli is type 1.
+        gasEstimateString: gasEstimate.toHexString(), // Output from gasEstimateForDeposit
+        // gasPriceString: gasPrice, // Current gas price   (This one is needed for type 1 tx)
+        maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
+        maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+      };
+      // const erc20AmountRecipients = tokenAmountRecipients;
+      const showSenderAddressToRecipient = true;
+      const railgunWalletID = railgunWallet?.railgunWalletInfo?.id || '0xnoWalletIDFound';
+      const sendWithPublicWallet = true;
+      const overallBatchMinGasPrice = '0';
+
+      console.log('erc20AmountRecipients showing before populating', erc20AmountRecipients);
+      const { serializedTransaction: serializedTx, error } = await populateProvedTransfer(
+        NetworkName.EthereumGoerli,
+        railgunWalletID,
+        showSenderAddressToRecipient,
+        memoText,
+        erc20AmountRecipients,
+        [], // nftAmountRecipients
+        undefined, // relayerFeeTokenAmountRecipient
+        sendWithPublicWallet,
+        overallBatchMinGasPrice,
+        gasDetailsSerialized,
+      );
+
+      // console.log(
+      //   '!!!!!!!!!!!!!!!!!!!!!!!!!!!finished the populateProvedTransfer function!!!!!!!§!!!!!!!!!!!!!!!!!!!!',
+      // );
+
+      if (error) {
+        console.log('There is ano error creating the populate Proof transaction');
+        console.error(error);
+        setTransactionError(error);
+      } else if (serializedTx) {
+        console.log('There is no error creating the populate Proof transaction');
+        console.log('serializedTransaction', serializedTx);
+        setSerializedTransaction(serializedTx);
+      }
+    },
+    [railgunWallet, erc20AmountRecipients],
+  );
+
+  // // console.log('erc20AmountRecipients: when calling hook', erc20AmountRecipients);
+  // const { createPopulateProvedTransfer, transactionError, serializedTransaction } =
+  //   usePopulateProvedTransfer({
+  //     railgunWalletID: railgunWallet?.railgunWalletInfo?.id || '0xnoWalletIDFound',
+  //     tokenAmountRecipients: erc20AmountRecipients,
+  //     sendWithPublicWallet: true,
+  //     overallBatchMinGasPrice: '0',
+  //   });
 
   react.useEffect(() => {
     console.log('transactionError: ', transactionError);
   }, [transactionError]);
 
+  // =================== END POPULATE PROOF ===================
+
+  // =================== START EXECUTE TRANSACTION ===================
+
   const executeSendTransaction = useExecuteTransaction();
+
+  // =================== END EXECUTE TRANSACTION ===================
 
   react.useEffect(() => {
     const fn = async () => {
@@ -199,7 +421,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
         );
         console.log('loadWalletByID');
         console.log({ railgunWallet });
-        setWallet(railgunWallet);
+        setRailgunWallet(railgunWallet);
       }
     };
     fn();
@@ -223,7 +445,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       mnemonic,
       creationBlockNumberMap,
     );
-    setWallet(railgunWallet);
+    setRailgunWallet(railgunWallet);
     localStorage.setItem(
       'wallet',
       JSON.stringify({
@@ -244,11 +466,11 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
   }, []);
 
   react.useEffect(() => {
-    if (!wallet) {
+    if (!railgunWallet) {
       return;
     }
 
-    console.log('GET BALANCES', wallet);
+    console.log('GET BALANCES', railgunWallet);
 
     const onBalanceUpdateCallback = ({
       chain,
@@ -264,6 +486,7 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     }): void => {
       // Do something with the private token balances.
       console.log('onBalanceUpdateCallback', { erc20Amounts, chain, railgunWalletID });
+      console.log('erc20Amounts', erc20Amounts);
       const balances: Balances = {};
       erc20Amounts.map(erc20Amount => {
         balances[erc20Amount.tokenAddress] = BigNumber.from(erc20Amount.amountString).toString();
@@ -274,14 +497,14 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     // eslint-disable-next-line @typescript-eslint/ban-ts-comment
     // @ts-ignore
     setOnBalanceUpdateCallback(onBalanceUpdateCallback as BalancesUpdatedCallback);
-  }, [wallet]);
+  }, [railgunWallet]);
 
   const value = react.useMemo(() => {
     return {
       account: account ? account : undefined,
       isProviderLoaded: isProviderLoaded,
       createWallet: createWallet,
-      wallet: wallet,
+      wallet: railgunWallet,
       fetchGasEstimate: fetchGasEstimate,
       gasEstimate: gasEstimate,
       executeGenerateTransferProof: executeGenerateTransferProof,
@@ -289,11 +512,13 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       balances: balances,
       executeSendTransaction,
       serializedTransaction,
+      erc20AmountRecipients,
+      setErc20AmountRecipients,
     };
   }, [
     account.address,
     isProviderLoaded,
-    wallet,
+    railgunWallet,
     fetchGasEstimate,
     gasEstimate,
     executeGenerateTransferProof,
@@ -301,6 +526,8 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
     serializedTransaction,
     executeSendTransaction,
     balances,
+    erc20AmountRecipients,
+    setErc20AmountRecipients,
   ]);
 
   return <RailgunContext.Provider value={value}>{children}</RailgunContext.Provider>;

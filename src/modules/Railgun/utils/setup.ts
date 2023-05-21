@@ -7,7 +7,7 @@ import {
 import { StartRailgunEngineResponse, NetworkName } from '@railgun-community/shared-models';
 import localforage from 'localforage';
 import LevelDB from 'level-js';
-import { ETH_PROVIDERS_JSON_GOERLI, ETH_PROVIDERS_JSON_POLYGON } from './networks';
+import { ETH_PROVIDERS_JSON_GOERLI } from './networks';
 
 type Optional<T> = T | undefined;
 

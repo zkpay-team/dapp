@@ -9,7 +9,7 @@ import {
 } from '@railgun-community/shared-models';
 import { useSigner } from 'wagmi';
 import { BigNumber, ethers } from 'ethers';
-import { erc20AmountRecipients } from '../context/railgun';
+// import { erc20AmountRecipients } from '../context/railgun';
 
 type Optional<T> = T | undefined;
 
