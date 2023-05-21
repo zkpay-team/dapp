@@ -50,7 +50,9 @@ function TokenList({ balances }: { balances: Balances }) {
             <p className='font-bold'>{token.name}</p>
             <p>
               {balances[token.address]
-                ? formatUnits(balances[token.address] as string, token.decimals)
+                ? parseFloat(
+                    formatUnits(balances[token.address] as string, token.decimals),
+                  ).toFixed(3)
                 : '0'}{' '}
               {token.code}
             </p>
