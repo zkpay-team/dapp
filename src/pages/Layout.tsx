@@ -94,7 +94,6 @@ function Layout({ children, className }: ContainerProps) {
             </div>
             <div className='mt-5 flex flex-1 flex-col justify-between'>
               <SideMenu />
-              <SideBottom />
             </div>
           </div>
         </div>
