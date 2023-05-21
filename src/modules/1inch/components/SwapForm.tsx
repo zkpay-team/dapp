@@ -6,7 +6,6 @@ import * as Yup from 'yup';
 import SubmitButton from '../../../components/Form/SubmitButton';
 import RailgunContext from '../../Railgun/context/railgun';
 import { useRouter } from 'next/router';
-import { FusionSDK, NetworkEnum } from '@1inch/fusion-sdk';
 import { tokens } from '../../Railgun/components/TokenList';
 import Image from 'next/image';
 
