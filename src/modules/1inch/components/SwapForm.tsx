@@ -135,9 +135,9 @@ function SwapForm() {
 
             <SubmitButton isSubmitting={isSubmitting} label='Swap & Shield' />
           </div>
-          <div className='flex justify-center mt-2'>
-            <p>powerd by</p>
-            <Image src={'/images/1inch.png'} width={200} height={200} alt='ZKpay logo' />
+          <div className='flex flex-col items-center justify-center mt-2'>
+            <p className='mb-2'>powered by</p>
+            <Image src={'/images/1inch-logo.png'} width={120} height={120} alt='ZKpay logo' />
           </div>
         </Form>
       )}
