@@ -1,4 +1,3 @@
-import Image from 'next/image';
 import RailgunAddress from '../modules/Railgun/components/RailgunAddress';
 import ReceiveForm from '../modules/Railgun/components/ReceiveForm';
 
@@ -11,9 +10,7 @@ function Receive() {
 
       <RailgunAddress />
 
-      <div className='flex justify-center'>
-        <Image src={'/images/qrcode.png'} alt='qrcode' width={200} height={200} />
-      </div>
+      <hr />
 
       <div className='mt-10'>
         <ReceiveForm />

@@ -5,6 +5,8 @@ import { tokens } from './TokenList';
 import { toast } from 'react-toastify';
 import { useContext } from 'react';
 import RailgunContext from '../context/railgun';
+import Image from 'next/image';
+import { QRCodeSVG } from 'qrcode.react';
 
 interface IFormValues {
   token: string;
@@ -28,8 +30,12 @@ function ReceiveForm() {
     amount: Yup.number().required('Please provide an amount'),
   });
 
+  const generateLink = (values: IFormValues): string => {
+    return `https://www.zk-pay.io/send?token=${values.token}&to[0]=${wallet.railgunWalletInfo?.railgunAddress}&amount[0]=${values.amount}`;
+  };
+
   const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
-    const text = `https://zkpay.herokuapp.com/send?token=${values.token}&to[0]=${wallet.railgunWalletInfo?.railgunAddress}&amount[0]=${values.amount}`;
+    const text = generateLink(values);
     navigator.clipboard.writeText(text);
     toast('Share link copied', {
       position: 'bottom-right',
@@ -45,9 +51,9 @@ function ReceiveForm() {
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({ isSubmitting, errors }) => (
+      {({ isSubmitting, errors, values }) => (
         <Form>
-          <div className='grid grid-cols-1 gap-6 border border-greeny rounded p-8'>
+          <div className=''>
             <div className='flex'>
               <label className='block flex-1 mr-4'>
                 <span className='text-gray-200'>Amount</span>
@@ -88,7 +94,22 @@ function ReceiveForm() {
               </p>
             )}
 
-            <SubmitButton isSubmitting={isSubmitting} label='Copy share link to clipboard' />
+            <div className='pt-8'>
+              <SubmitButton isSubmitting={isSubmitting} label='Copy share link to clipboard' />
+            </div>
+          </div>
+          <div>
+            <p className='py-8 block text-center'>or scan it</p>
+            <div className='flex justify-center'>
+              <QRCodeSVG
+                value={generateLink(values)}
+                size={200}
+                bgColor='#11FEB7'
+                fgColor='#0A0A18'
+                level='L'
+                includeMargin={true}
+              />
+            </div>
           </div>
         </Form>
       )}

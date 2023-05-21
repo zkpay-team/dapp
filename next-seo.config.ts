@@ -1,7 +1,7 @@
 const title = 'ZK Pay';
 const description =
   'ZK Pay is an infrastructure to support use cases like private bounty and private payroll payments';
-const url = 'https://zkpay.io';
+const url = 'https://www.zk-pay.io';
 
 export default {
   title,
@@ -15,7 +15,7 @@ export default {
     description,
     images: [
       {
-        url: `https://zkpay.io/images/cover.jpeg`,
+        url: `https://www.zk-pay.io/images/cover.jpeg`,
         width: 2000,
         height: 1142,
         alt: 'Zkwork profile',

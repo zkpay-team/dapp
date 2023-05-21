@@ -16,7 +16,7 @@ export const Footer = () => {
           </a>
           <a
             className='btn btn-primary btn-sm me-2 my-2'
-            href='https://zkpay.ioimages/ee/Uc8K1Twrbb.jpg'>
+            href='https://www.zk-pay.ioimages/ee/Uc8K1Twrbb.jpg'>
             Looking for something? 👀
           </a>
         </div>
