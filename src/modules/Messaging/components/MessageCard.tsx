@@ -1,13 +1,12 @@
-import Image from 'next/image';
 import { useContext } from 'react';
 import Loading from '../../../components/Loading';
 import TalentLayerContext from '../../../context/talentLayer';
-import { truncateAddress } from '../../../utils';
+import { shortenString } from '../../../utils';
 import { formatDateDivider } from '../../../utils/dates';
+import { tokens } from '../../Railgun/components/TokenList';
 import { formatDateTime } from '../utils/messaging';
 import { ChatMessageStatus, XmtpChatMessage } from '../utils/types';
-import { tokens } from '../../Railgun/components/TokenList';
-import { shortenString } from '../../../utils';
+import { ArrowUpRightIcon } from '@heroicons/react/24/outline';
 
 interface IMessageCardProps {
   message: XmtpChatMessage;
@@ -18,9 +17,10 @@ const formatMessage = (message: string) => {
   if (message.includes('/send?')) {
     const url = new URL(message);
 
-    const token = 'DAI';
+    const tokenAddress = url.searchParams.get('token');
     const to = url.searchParams.get('to[0]');
     const amount = url.searchParams.get('amount[0]');
+    const token = tokens.find(token => token.address === tokenAddress);
 
     if (!to || !token || !amount) {
       return message;
@@ -29,8 +29,17 @@ const formatMessage = (message: string) => {
     return (
       <a
         href={message}
-        className='block text-center rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full mt-2'>
-        Send request of {amount} {token} to {shortenString(to, 3, 3)}
+        className='border border-gray-200 shadow rounded p-3 flex items-center bg-endnight text-white mt-2'>
+        <img src={token.logo} alt={token.address} className='w-8 h-8 rounded-full mr-4' />
+        <div className='text-left'>
+          <p className='font-bold'>
+            {amount} {token.code}
+          </p>
+          <p className='text-gray-400'>for {shortenString(to, 3, 3)}</p>
+        </div>
+        <p className='ml-4'>
+          <ArrowUpRightIcon className='w-[20px]' />
+        </p>
       </a>
     );
   }
@@ -55,15 +64,15 @@ const MessageCard = ({ message, dateHasChanged }: IMessageCardProps) => {
           <div
             className={`py-3 px-4 text-sm ${
               isSender && message.status === ChatMessageStatus.SENT
-                ? 'ml-2 bg-greeny text-midnight rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                ? 'ml-12 bg-[#b2c9f7] text-midnight rounded-bl-2xl rounded-tl-2xl rounded-tr-xl'
                 : isSender && message.status === ChatMessageStatus.ERROR
-                ? 'ml-2 bg-red-600 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                ? 'ml-12 bg-red-600 rounded-br-2xl rounded-tl-2xl rounded-tr-xl'
                 : isSender && message.status === ChatMessageStatus.PENDING
-                ? 'ml-2 bg-gray-200 text-midnight rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
-                : 'mr-2 bg-gray-200 text-midnight rounded-bl-3xl rounded-tl-3xl rounded-tr-xl'
+                ? 'ml-12 bg-gray-200 text-midnight rounded-bl-2xl rounded-tl-2xl rounded-tr-xl'
+                : 'mr-12 bg-gray-200 text-midnight rounded-br-2xl rounded-tr-2xl rounded-tl-xl'
             }
           text-white`}>
-            <span className='pr-1 text-gray-400 text-xs w-[50px]'>
+            <span className='pr-1 text-gray-600 text-xs w-[50px]'>
               {formatDateTime(message.timestamp)}
             </span>
             {isSender && message.status === ChatMessageStatus.SENT && (
