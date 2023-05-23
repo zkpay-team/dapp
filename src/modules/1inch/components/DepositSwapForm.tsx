@@ -136,7 +136,7 @@ function DepositSwapForm() {
           </div>
           <div className='flex flex-col items-center justify-center mt-2'>
             <p className='mb-2'>powered by</p>
-            <Image src={'/images/1inch-logo.png'} width={120} height={120} alt='ZKpay logo' />
+            <Image src={'/images/1inch-logo.png'} width={60} height={60} alt='ZKpay logo' />
           </div>
         </Form>
       )}

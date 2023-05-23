@@ -5,13 +5,12 @@ import { XmtpChatMessage } from '../utils/types';
 
 interface IConversationListProps {
   conversationMessages: Map<string, XmtpChatMessage[]>;
-  selectedConversationPeerAddress: string;
+  selectedConversationPeerAddress?: string;
   conversationsLoading: boolean;
 }
 
 const ConversationList = ({
   conversationMessages,
-  selectedConversationPeerAddress,
   conversationsLoading,
 }: IConversationListProps) => {
   // Sort conversations by latest message timestamp
@@ -39,7 +38,6 @@ const ConversationList = ({
                   : undefined
               }
               peerAddress={peerAddress}
-              selectedConversationPeerAddress={selectedConversationPeerAddress}
             />
           );
         })}

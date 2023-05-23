@@ -20,7 +20,7 @@ const useSendMessage = (peerAddress: string, senderAddress: string | undefined) 
     //Could add a context to define the linked job
     const context: InvitationContext = {
       conversationId: conversationId,
-      metadata: { ['domain']: 'TalentLayer' },
+      metadata: { ['domain']: 'zkpay' },
     };
     const conversation = await client.conversations.newConversation(peerAddress, context);
 
