@@ -29,8 +29,8 @@ const formatMessage = (message: string) => {
     return (
       <a
         href={message}
-        className='block text-center border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'>
-        Send {amount} {token} to {shortenString(to, 8, 5)}
+        className='block text-center rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full mt-2'>
+        Send request of {amount} {token} to {shortenString(to, 3, 3)}
       </a>
     );
   }

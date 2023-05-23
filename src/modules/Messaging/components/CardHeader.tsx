@@ -32,7 +32,7 @@ const CardHeader = ({ peerAddress }: ICardHeaderProps) => {
 
   return (
     <div className='flex flex-row text-white'>
-      <div className='flex justify-between py-4 px-4 items-center border-b w-full border-gray-800'>
+      <div className='flex justify-between py-2 px-4 items-center border-b w-full border-gray-800'>
         {peerAddress && (
           <>
             <nav className='flex mr-5' aria-label='Back'>

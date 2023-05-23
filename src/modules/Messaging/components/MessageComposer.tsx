@@ -34,7 +34,7 @@ const MessageComposer = ({
 
   return (
     <>
-      <div className='flex flex-row pt-5 fixed bottom-[64px] w-full'>
+      <div className='flex flex-row pt-5 fixed bottom-[64px] md:bottom-0 w-full md:w-[calc(100vw-256px)]'>
         <input
           className='w-full py-4 px-3 bg-[#24243f] border-0 text-white text-sm'
           type='text'

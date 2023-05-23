@@ -122,7 +122,7 @@ function Dashboard() {
   }
 
   return (
-    <div className='mx-auto text-gray-900 sm:px-4 lg:px-0'>
+    <div className='mx-auto text-gray-900'>
       {!providerState?.client && account && (
         <div className='flex items-center justify-center pt-16'>
           <button

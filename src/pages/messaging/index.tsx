@@ -1,25 +1,26 @@
 import { useContext } from 'react';
 import { useSigner } from 'wagmi';
+import { watchAccount } from '@wagmi/core';
 import Steps from '../../components/Steps';
 import CardHeader from '../../modules/Messaging/components/CardHeader';
 import ConversationList from '../../modules/Messaging/components/ConversationList';
 import { XmtpContext } from '../../modules/Messaging/context/XmtpContext';
 import useStreamConversations from '../../modules/Messaging/hooks/useStreamConversations';
 import RailgunContext from '../../modules/Railgun/context/railgun';
+import { useRouter } from 'next/router';
 
 function MessagingIndex() {
+  const router = useRouter();
   const { wallet, account } = useContext(RailgunContext);
   const { data: signer } = useSigner({
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
   const { providerState } = useContext(XmtpContext);
 
-  // watchAccount(() => {
-  //   providerState?.disconnect?.();
-  //   selectedConversationPeerAddress
-  //     ? router.push(`/messaging/${selectedConversationPeerAddress}`)
-  //     : router.push(`/messaging`);
-  // });
+  watchAccount(() => {
+    providerState?.disconnect?.();
+    router.push(`/messaging`);
+  });
 
   // Listens to new conversations ? ==> Yes, & sets them in "xmtp context". Stream stops "onDestroy"
   useStreamConversations();
