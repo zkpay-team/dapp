@@ -1,12 +1,13 @@
-import { useCallback, useEffect, useContext } from 'react';
-import { ethers } from 'ethers';
-import { useSigner, useProvider, chain } from 'wagmi';
+import { useCallback, useContext } from 'react';
+import { useProvider, useSigner } from 'wagmi';
 import RailgunContext from '../context/railgun';
-import { sign } from 'crypto';
+import { createPopulateProvedTransfer } from '../utils/createPopulateProvedTransfer';
+import { executeGenerateTransferProof } from '../utils/executeGenerateTransferProof';
+import { executeSendTransaction } from '../utils/executeSendTransaction';
+import { fetchGasEstimate } from '../utils/fetchGasEstimate';
 
-import { deserializeTransaction } from '@railgun-community/shared-models';
-
-export function useExecuteTransaction() {
+export function useExecuteTransaction(): (erc20AmountsByRecipient: []) => void {
+  const { wallet } = useContext(RailgunContext);
   const { data: signer } = useSigner({
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
@@ -15,58 +16,35 @@ export function useExecuteTransaction() {
     chainId: parseInt(process.env.NEXT_PUBLIC_NETWORK_ID as string),
   });
 
-  const executeSendTransaction = useCallback(
-    async (serializedTransaction: string | undefined) => {
-      console.log('entered executeSendTransaction');
-      try {
-        if (!serializedTransaction) {
-          console.error('Missing serializedTransaction.');
-          return;
-        }
-        if (!provider) {
-          console.error('Missing provider.');
-          return;
-        }
-        if (!signer) {
-          console.error('Missing signer.');
-          return;
-        }
-
-        const address = await signer.getAddress();
-        const nonce = await provider.getTransactionCount(address, 'pending');
-
-        // Deserialize the transaction
-        const transactionReq = deserializeTransaction(serializedTransaction, nonce, 5);
-        console.log('🚀 ~ file: useExecuteTransaction.ts:36 ~ transactionReq:', transactionReq);
-
-        transactionReq.from = await signer.getAddress();
-
-        console.log('await signer.getAddress()', await signer.getAddress());
-
-        // Send the transaction
-        let txResponse;
-        try {
-          txResponse = await signer.sendTransaction(transactionReq);
-        } catch (error) {
-          console.log('Error sending transaction:', error);
-        }
-
-        // Wait for the transaction to be mined
-        if (!txResponse) {
-          console.error('Missing txResponse.');
-          return;
-        }
-
-        console.log('waiting...');
-        const receipt = await txResponse.wait();
-
-        console.log('Transaction successfully mined:', receipt);
-      } catch (err) {
-        console.error('Error sending transaction:', err);
+  const executeChainOfFunctions = useCallback(async (erc20AmountsByRecipient: []) => {
+    try {
+      if (!signer || !wallet) {
+        return;
       }
-    },
-    [signer, provider],
-  );
 
-  return executeSendTransaction;
+      console.log('Get the gas estimate!');
+      const gasEstimate = await fetchGasEstimate(signer, wallet, erc20AmountsByRecipient);
+      console.log('Estimate', gasEstimate);
+
+      console.log('create the Proof');
+      await executeGenerateTransferProof(wallet, erc20AmountsByRecipient);
+
+      console.log('Populate proved transfer');
+      const serializedTransaction = await createPopulateProvedTransfer(
+        signer,
+        gasEstimate,
+        wallet,
+        erc20AmountsByRecipient,
+      );
+
+      console.log('Execute send tx');
+      await executeSendTransaction(signer, provider, serializedTransaction);
+
+      console.log('proof created');
+    } catch (error) {
+      console.error('Error:', error);
+    }
+  }, []);
+
+  return executeChainOfFunctions;
 }
