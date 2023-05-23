@@ -9,7 +9,7 @@ function UserSubMenu() {
 
   return (
     <>
-      <Menu.Item key='editProfile'>
+      {/* <Menu.Item key='editProfile'>
         {({ active }) => (
           <Link
             href='/profile/edit'
@@ -17,7 +17,7 @@ function UserSubMenu() {
             Edit my profile
           </Link>
         )}
-      </Menu.Item>
+      </Menu.Item> */}
 
       <Menu.Item key='recover'>
         {({ active }) => (

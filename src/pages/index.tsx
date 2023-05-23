@@ -24,12 +24,20 @@ function Home() {
         <TokenList balances={balances} />
       </div>
 
-      <button
-        type='button'
-        className='mt-4 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
-        onClick={() => router.push('/deposit')}>
-        Deposit
-      </button>
+      <div className='grid grid-cols-2 gap-4'>
+        <button
+          type='button'
+          className='mt-4 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
+          onClick={() => router.push('/deposit')}>
+          Deposit
+        </button>
+        <button
+          type='button'
+          className='mt-4 border border-greeny rounded hover:bg-endnight text-white bg-midnight px-5 py-2 w-full'
+          onClick={() => router.push('/withdraw')}>
+          Withdraw
+        </button>
+      </div>
     </div>
   );
 }
