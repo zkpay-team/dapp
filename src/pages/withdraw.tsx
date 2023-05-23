@@ -1,7 +1,7 @@
 import { useContext } from 'react';
 import Steps from '../components/Steps';
+import WithdrawSwapForm from '../modules/1inch/components/WithdrawSwapForm';
 import RailgunContext from '../modules/Railgun/context/railgun';
-import SwapForm from '../modules/1inch/components/SwapForm';
 
 function Deposit() {
   const { wallet, account } = useContext(RailgunContext);
@@ -17,7 +17,7 @@ function Deposit() {
       </p>
 
       <div className='mt-4'>
-        <SwapForm />
+        <WithdrawSwapForm />
       </div>
     </div>
   );

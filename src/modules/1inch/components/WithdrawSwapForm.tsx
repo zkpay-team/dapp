@@ -23,7 +23,7 @@ const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
   };
 };
 
-function SwapForm() {
+function WithdrawSwapForm() {
   const { account, wallet } = useContext(RailgunContext);
   const router = useRouter();
   const query = router.query;
@@ -78,7 +78,7 @@ function SwapForm() {
         <Form>
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>
-              <span className='text-gray-200'>Token</span>
+              <span className='text-gray-200'>From</span>
               <Field
                 component='select'
                 id='from'
@@ -100,7 +100,7 @@ function SwapForm() {
             </label>
 
             <label className='block relative'>
-              <span className='text-gray-200'>Token</span>
+              <span className='text-gray-200'>To</span>
               <Field
                 component='select'
                 id='to'
@@ -132,11 +132,11 @@ function SwapForm() {
               />
             </label>
 
-            <SubmitButton isSubmitting={isSubmitting} label='Swap & Shield' />
+            <SubmitButton isSubmitting={isSubmitting} label='unShield & Swap' />
           </div>
           <div className='flex flex-col items-center justify-center mt-2'>
-            <p className='mb-2'>powered by</p>
-            <Image src={'/images/1inch-logo.png'} width={120} height={120} alt='ZKpay logo' />
+            <p className='mb-2'>swap powered by</p>
+            <Image src={'/images/1inch-logo.png'} width={60} height={60} alt='ZKpay logo' />
           </div>
         </Form>
       )}
@@ -144,4 +144,4 @@ function SwapForm() {
   );
 }
 
-export default SwapForm;
+export default WithdrawSwapForm;
