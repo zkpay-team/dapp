@@ -7,6 +7,7 @@ interface Token {
   code: string;
   logo: string;
   decimals: number;
+  rounds: number;
   address: string;
 }
 
@@ -17,6 +18,7 @@ export const tokens: Token[] = [
     code: 'DAI',
     logo: 'https://app.railway.xyz/static/media/DAI.c5fb9e18b42bfe440070.png',
     decimals: 18,
+    rounds: 6,
     address: '0xdc31ee1784292379fbb2964b3b9c4124d8f89c60',
   },
   {
@@ -25,6 +27,7 @@ export const tokens: Token[] = [
     code: 'USDC',
     logo: 'https://cryptologos.cc/logos/usd-coin-usdc-logo.png?v=025',
     decimals: 6,
+    rounds: 2,
     address: '0x07865c6e87b9f70255377e024ace6630c1eaa37f',
   },
   {
@@ -33,6 +36,7 @@ export const tokens: Token[] = [
     code: 'WETH',
     logo: 'https://app.railway.xyz/static/media/WETH.eb87cb2ae5074812267d.png',
     decimals: 12,
+    rounds: 6,
     address: '0x07861c6e87b9f70255377e024ace6630c1eaa37f',
   },
   // Add more token objects as needed
@@ -50,7 +54,9 @@ function TokenList({ balances }: { balances: Balances }) {
             <p className='font-bold'>{token.name}</p>
             <p>
               {balances[token.address]
-                ? formatUnits(balances[token.address] as string, token.decimals)
+                ? parseFloat(
+                    formatUnits(balances[token.address] as string, token.decimals),
+                  ).toFixed(token.rounds)
                 : '0'}{' '}
               {token.code}
             </p>
