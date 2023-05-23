@@ -168,12 +168,12 @@ function Dashboard() {
             )}
           </div>
           {messageSendingErrorMsg && (
-            <div className={'text-center'}>
+            <div className={'text-center text-xs px-4'}>
               <p className={'text-red-400 ml-1'}>{messageSendingErrorMsg}</p>
             </div>
           )}
           {selectedConversationPeerAddress && !selectedConversationPeerAddress && (
-            <div className={'text-center'}>
+            <div className={'text-center text-xs px-4'}>
               <p className={'text-red-400 ml-1'}>User is not registered</p>
             </div>
           )}

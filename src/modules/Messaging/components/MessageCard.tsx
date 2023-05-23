@@ -49,42 +49,30 @@ const MessageCard = ({ message, dateHasChanged }: IMessageCardProps) => {
       {dateHasChanged && <DateDivider date={message.timestamp} />}
       {message.from && (
         <div
-          className={`flex ${isSender ? 'justify-end pr-5' : 'justify-start'} mb-4 items-center`}>
-          {isSender && (
-            <>
-              <span className='text-sm pr-3 text-gray-400'>
-                {formatDateTime(message.timestamp)}
-              </span>
-              <Image
-                src={`/images/default-avatar-1.jpeg`}
-                className='object-cover h-12 w-12 rounded-full'
-                width={50}
-                height={50}
-                alt=''
-              />
-            </>
-          )}
+          className={`flex ${
+            isSender ? 'justify-end pr-5' : 'justify-start pl-5'
+          } mb-3 items-center`}>
           <div
-            className={`py-3 px-4 ${
+            className={`py-3 px-4 text-sm ${
               isSender && message.status === ChatMessageStatus.SENT
                 ? 'ml-2 bg-greeny text-midnight rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
                 : isSender && message.status === ChatMessageStatus.ERROR
                 ? 'ml-2 bg-red-600 rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
                 : isSender && message.status === ChatMessageStatus.PENDING
-                ? 'ml-2 bg-endnight rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
-                : 'mr-2 bg-endnight rounded-bl-3xl rounded-tl-3xl rounded-tr-xl'
+                ? 'ml-2 bg-gray-200 text-midnight rounded-br-3xl rounded-tr-3xl rounded-tl-xl'
+                : 'mr-2 bg-gray-200 text-midnight rounded-bl-3xl rounded-tl-3xl rounded-tr-xl'
             }
           text-white`}>
+            <span className='pr-1 text-gray-400 text-xs w-[50px]'>
+              {formatDateTime(message.timestamp)}
+            </span>
             {isSender && message.status === ChatMessageStatus.SENT && (
-              <>
-                <div>{<b>{truncateAddress(message.from)}</b>}</div>
-                <div className={'break-all'}>{messageContent}</div>
-              </>
+              <div className={'break-all'}>{messageContent}</div>
             )}
+            {!isSender && <div className={'break-all'}>{messageContent}</div>}
             {isSender && message.status === ChatMessageStatus.PENDING && (
               <div className='flex flex-row items-center'>
                 <div>
-                  <div>{<b>{truncateAddress(message.from)}</b>}</div>
                   <div className={'break-all'}>{messageContent}</div>
                 </div>
                 <div className='ml-2'>
@@ -93,32 +81,9 @@ const MessageCard = ({ message, dateHasChanged }: IMessageCardProps) => {
               </div>
             )}
             {isSender && message.status === ChatMessageStatus.ERROR && (
-              <>
-                <div>{<b>{truncateAddress(message.from)}</b>}</div>
-                <div className={'break-all'}>{messageContent}</div>
-              </>
-            )}
-            {!isSender && (
-              <>
-                <div>{<b>{truncateAddress(message.from)}</b>}</div>
-                <div className={'break-all'}>{messageContent}</div>
-              </>
+              <div className={'break-all'}>{messageContent}</div>
             )}
           </div>
-          {!isSender && (
-            <>
-              <Image
-                src={`/images/default-avatar-2.jpeg`}
-                className='object-cover h-12 w-12 rounded-full'
-                width={50}
-                height={50}
-                alt=''
-              />
-              <span className='text-sm pl-3 text-gray-400'>
-                {formatDateTime(message.timestamp)}
-              </span>
-            </>
-          )}
         </div>
       )}
     </>

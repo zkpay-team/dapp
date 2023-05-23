@@ -48,9 +48,9 @@ const CardHeader = ({ peerAddress }: ICardHeaderProps) => {
                 </li>
               </ol>
             </nav>
-            <p className='w-full h-full flex items-center'>
+            <p className='w-full h-full flex items-center text-xs'>
               To:
-              <span className='ml-2 pl-2 pr-2text-xs'>{truncateAddress(peerAddress, 5)}</span>
+              <span className='pr-2'>{truncateAddress(peerAddress, 5)}</span>
             </p>
           </>
         )}
