@@ -27,7 +27,7 @@ const TalentLayerProvider = ({ children }: { children: ReactNode }) => {
 
       try {
         const response = await getUserByAddress(account.address);
-        if (response?.data?.data?.users[0] !== null) {
+        if (response?.data?.data?.users?.length > 0) {
           setUser(response.data.data.users[0]);
           setIsActiveDelegate(
             process.env.NEXT_PUBLIC_ACTIVE_DELEGATE &&
