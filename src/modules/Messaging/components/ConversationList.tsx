@@ -23,7 +23,7 @@ const ConversationList = ({
   return (
     <>
       {conversationsLoading && (
-        <div className='flex flex-col mt-5'>
+        <div className='flex flex-col mt-5 pb-8'>
           <Loading />
         </div>
       )}
