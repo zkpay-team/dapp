@@ -51,7 +51,7 @@ function MyApp({ Component, pageProps }: AppProps) {
 
   return (
     <>
-      <Script src='snarkjs.min.js' strategy='beforeInteractive' />
+      <Script src='/snarkjs.min.js' strategy='beforeInteractive' />
       <GoogleAnalytics trackPageViews />
       <DefaultSeo {...SEO} />
       <ToastContainer position='bottom-right' />

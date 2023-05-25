@@ -18,14 +18,14 @@ export default {
         url: `https://www.zk-pay.io/images/cover.jpeg`,
         width: 2000,
         height: 1142,
-        alt: 'Zkwork profile',
+        alt: 'ZKPay profile',
         type: 'image/jpeg',
       },
     ],
   },
   twitter: {
-    handle: '@ZKWork',
-    site: '@ZKWork',
+    handle: '@ZKPay',
+    site: '@ZKPay',
     cardType: 'summary_large_image',
   },
 };
