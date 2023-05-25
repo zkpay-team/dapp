@@ -18,7 +18,6 @@ const MessageComposer = ({
   peerUserExistsOnXMTP,
   peerUserExistsOnTalentLayer,
 }: IMessageComposerProps) => {
-  console.log('MessageComposer');
   const renderSendButton = (peerUserExists: boolean, sendingPending: boolean) => {
     return (
       !sendingPending && (

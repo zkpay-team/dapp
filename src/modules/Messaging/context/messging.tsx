@@ -44,7 +44,7 @@ const MessagingProvider = ({ children }: { children: ReactNode }) => {
         try {
           await providerState.initClient(signer);
         } catch (e) {
-          console.log('ServiceDetail - Error initializing XMTP client: ', e);
+          console.error('ServiceDetail - Error initializing XMTP client: ', e);
           return;
         }
       }

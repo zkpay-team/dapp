@@ -1,12 +1,12 @@
 import { generateTransferProof } from '@railgun-community/quickstart';
 import { LoadRailgunWalletResponse, NetworkName } from '@railgun-community/shared-models';
+import { getEncryptionKey } from './encryptionKey';
+import { RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 
 export const executeGenerateTransferProof = async (
   wallet: LoadRailgunWalletResponse,
-  erc20AmountsByRecipient: [],
+  erc20AmountsByRecipient: RailgunERC20AmountRecipient[],
 ): Promise<boolean> => {
-  const memoText = 'Getting the salariess! 🍝😋';
-
   const progressCallback = (progress: number) => {
     // Handle proof progress (show in UI).
     // Proofs can take 20-30 seconds on slower devices.
@@ -15,16 +15,21 @@ export const executeGenerateTransferProof = async (
 
   const showSenderAddressToRecipient = true;
   const sendWithPublicWallet = true;
-  const railgunWalletID = wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound';
+  const railgunWalletID = wallet?.railgunWalletInfo?.id;
+  const encryptionKey = getEncryptionKey();
   const overallBatchMinGasPrice = '0';
   const tokenAmountRecipients = erc20AmountsByRecipient;
-  console.log('tokenAmountRecipients showing before generating', tokenAmountRecipients);
+
+  if (!railgunWalletID || !encryptionKey) {
+    throw new Error('Railgun wallet not configured');
+  }
+
   const { error } = await generateTransferProof(
     NetworkName.EthereumGoerli,
     railgunWalletID,
-    wallet?.encryptionKey,
+    encryptionKey,
     showSenderAddressToRecipient,
-    memoText,
+    null,
     tokenAmountRecipients,
     [], // nftAmountRecipients
     undefined,
@@ -34,11 +39,6 @@ export const executeGenerateTransferProof = async (
   );
 
   if (error) {
-    console.log('the error comes from generateTransferProof');
-    console.log('railgunWalletID', railgunWalletID);
-    console.log('encryptionKey', wallet?.encryptionKey);
-    console.log('tokenAmountRecipients', tokenAmountRecipients);
-
     console.error(error);
     throw new Error(error);
   }

@@ -113,7 +113,6 @@ function ProposalForm({
         });
 
         let tx;
-        console.log('isActiveDelegate', isActiveDelegate);
         if (isActiveDelegate) {
           const response = await delegateCreateOrUpdateProposal(
             user.id,

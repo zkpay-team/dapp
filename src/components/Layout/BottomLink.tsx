@@ -2,7 +2,6 @@ import { useRouter } from 'next/router';
 
 function BottomLink({ children, href }: { children: React.ReactNode; href: string }) {
   const router = useRouter();
-  console.log(router.asPath, { href });
   let className =
     router.asPath === href || (href != '/' && router.asPath.includes(href))
       ? 'bg-greeny text-midnight font-medium'

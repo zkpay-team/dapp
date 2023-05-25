@@ -37,7 +37,7 @@ const useStreamMessages = (
         setConversation(conversation);
       } catch (e) {
         setMessageSendingErrorMsg(NON_EXISTING_XMTP_USER_ERROR_MESSAGE);
-        console.log('error', e);
+        console.error('error', e);
       }
     };
     getConversation();
