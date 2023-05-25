@@ -3,7 +3,7 @@ import { useContext, useEffect, useState } from 'react';
 import { Conversation, DecodedMessage, Stream } from '@xmtp/xmtp-js';
 import TalentLayerContext from '../../../context/talentLayer';
 import { buildChatMessage, buildConversationId, getLatestMessage } from '../utils/messaging';
-import { InvitationContext } from '@xmtp/xmtp-js/dist/types/src/Invitation';
+import { InvitationContext } from '@xmtp/xmtp-js';
 
 export const NON_EXISTING_XMTP_USER_ERROR_MESSAGE =
   'The user you are trying to contact is not registered on XMTP network.';

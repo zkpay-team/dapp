@@ -1,17 +1,15 @@
 import { XmtpContext } from '../context/XmtpContext';
 import { useContext } from 'react';
-import { InvitationContext } from '@xmtp/xmtp-js/dist/types/src/Invitation';
-import useUserByAddress from '../../../hooks/useUserByAddress';
+import { InvitationContext } from '@xmtp/xmtp-js';
 import { buildConversationId } from '../utils/messaging';
 import { DecodedMessage } from '@xmtp/xmtp-js';
 
 const useSendMessage = (peerAddress: string, senderAddress: string | undefined) => {
   const { providerState } = useContext(XmtpContext);
-  const peerUser = useUserByAddress(peerAddress);
   const { client } = providerState || {};
 
   const sendMessage = async (message: string): Promise<DecodedMessage> => {
-    if (!client || !peerAddress || !peerUser?.id || !senderAddress) {
+    if (!client || !peerAddress || !senderAddress) {
       throw new Error('Message sending failed');
     }
 
