@@ -9,6 +9,7 @@ import RailgunContext from '../context/railgun';
 import { useExecuteTransaction } from '../hooks/useExecuteTransaction';
 import { Group } from './GroupForm';
 import { tokens } from './TokenList';
+import { RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 
 interface IFormValues {
   token: string;
@@ -60,7 +61,7 @@ const getInitialValuesFromUrl = (query: ParsedUrlQuery): IFormValues => {
 
 function SendForm() {
   const { wallet } = useContext(RailgunContext);
-  const executeChainOfFunctions = useExecuteTransaction();
+  const executeTransaction = useExecuteTransaction();
   const router = useRouter();
   const query = router.query;
 
@@ -74,49 +75,41 @@ function SendForm() {
     token: Yup.string().required('Please select a token'),
   });
 
-  const [submitted, setSubmitted] = useState(false);
-  const onSubmit = async (values: IFormValues, { resetForm }: { resetForm: () => void }) => {
+  const onSubmit = async (
+    values: IFormValues,
+    {
+      resetForm,
+      setSubmitting,
+    }: { setSubmitting: (isSubmitting: boolean) => void; resetForm: () => void },
+  ) => {
+    setSubmitting(true);
     for (let i = values.recipients.length - 1; i >= 0; i--) {
       if (values.recipients[i].to === '') {
         values.recipients.splice(i, 1);
       }
     }
-    console.log('values', { values });
-
-    toast('Please Sign!', {
-      position: 'bottom-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      progress: undefined,
-      theme: 'dark',
-    });
-    const erc20AmountsByRecipient = values.recipients.map((recipient, index) => {
-      return {
-        tokenAddress: values.token,
-        amountString: recipient.amount?.toString(),
-        recipientAddress: recipient.to,
-      };
-    });
-    await executeChainOfFunctions(erc20AmountsByRecipient);
-    setSubmitted(true);
-    resetForm();
-
-    toast('Money Send!', {
-      position: 'bottom-right',
-      autoClose: 5000,
-      hideProgressBar: false,
-      closeOnClick: true,
-      pauseOnHover: true,
-      progress: undefined,
-      theme: 'dark',
-    });
+    const erc20AmountsByRecipient: RailgunERC20AmountRecipient[] = values.recipients.map(
+      recipient => {
+        return {
+          tokenAddress: values.token,
+          amountString: recipient.amount?.toString(),
+          recipientAddress: recipient.to,
+        };
+      },
+    );
+    try {
+      await executeTransaction(erc20AmountsByRecipient);
+      resetForm();
+    } catch (e) {
+      console.error('FINAL ERROR', e);
+    } finally {
+      setSubmitting(false);
+    }
   };
 
   return (
     <Formik initialValues={initialValues} onSubmit={onSubmit} validationSchema={validationSchema}>
-      {({ isSubmitting, values, setFieldValue }) => (
+      {({ isSubmitting, values }) => (
         <Form>
           <div className='grid grid-cols-1 gap-6 mb-8'>
             <label className='block relative'>

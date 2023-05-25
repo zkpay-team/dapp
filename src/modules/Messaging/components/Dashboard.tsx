@@ -115,8 +115,6 @@ function Dashboard() {
     }
   };
 
-  console.log('Messaging', { account });
-
   if (!account?.isConnected || !wallet?.railgunWalletInfo) {
     return <Steps />;
   }

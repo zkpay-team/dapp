@@ -23,7 +23,7 @@ declare global {
   }
 }
 
-interface localStoreWallet {
+export interface localStoreWallet {
   encryptionKey: string;
   railgunWalletInfo: {
     id: string;
@@ -54,7 +54,6 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
 
   react.useEffect(() => {
     const fn = async () => {
-      console.log('initializeRailgun');
       const response = initializeRailgun();
 
       // Note: SnarkJS library is not properly typed.
@@ -62,28 +61,21 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
         const groth16 = window.snarkjs.groth16;
         getProver().setSnarkJSGroth16(groth16);
       } catch (e) {
-        console.log('error while getting the prover');
-        console.log(e);
+        console.error('error while getting the prover', e);
       }
 
       if (response.error) {
         console.error(`Failed to start the Railgun Engine: ${response.error}`);
-      } else {
-        console.log('Successfully started the Railgun Engine!');
+        return;
       }
 
-      // LOAD Provider
-      const res = await loadProviders();
-      console.log({ res });
-
-      // Provider is done loading.
+      await loadProviders();
       setProviderLoaded(true);
 
       // LOAD Wallet if there is one
       const savedWalletString = localStorage.getItem('wallet');
       if (savedWalletString) {
         const savedWallet = JSON.parse(savedWalletString) as localStoreWallet;
-        console.log('savedWallet', savedWallet);
         if (!savedWallet.encryptionKey || !savedWallet.railgunWalletInfo.id) {
           return;
         }
@@ -92,8 +84,6 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
           savedWallet.railgunWalletInfo.id,
           false,
         );
-        console.log('loadWalletByID');
-        console.log({ railgunWallet });
         setRailgunWallet(railgunWallet);
       }
     };
@@ -143,8 +133,6 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       return;
     }
 
-    console.log('GET BALANCES', railgunWallet);
-
     const onBalanceUpdateCallback = ({
       chain,
       railgunWalletID,
@@ -158,8 +146,6 @@ const RailgunProvider = ({ children }: { children: react.ReactNode }) => {
       }[];
     }): void => {
       // Do something with the private token balances.
-      console.log('onBalanceUpdateCallback', { erc20Amounts, chain, railgunWalletID });
-      console.log('erc20Amounts', erc20Amounts);
       const balances: Balances = {};
       erc20Amounts.map(erc20Amount => {
         balances[erc20Amount.tokenAddress] = BigNumber.from(erc20Amount.amountString).toString();

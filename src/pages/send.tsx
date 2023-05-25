@@ -5,7 +5,6 @@ import RailgunContext from '../modules/Railgun/context/railgun';
 
 function Send() {
   const { wallet, account } = useContext(RailgunContext);
-  console.log({ account });
 
   if (!account?.isConnected || !wallet?.railgunWalletInfo) {
     return <Steps />;

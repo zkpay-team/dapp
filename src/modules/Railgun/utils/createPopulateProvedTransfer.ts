@@ -6,31 +6,30 @@ import {
   TransactionGasDetailsSerialized,
 } from '@railgun-community/shared-models';
 import { BigNumber, Signer, ethers } from 'ethers';
+import { RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 
 export const createPopulateProvedTransfer = async (
   signer: Signer,
   gasEstimate: BigNumber,
   wallet: LoadRailgunWalletResponse,
-  erc20AmountsByRecipient: [],
+  erc20AmountsByRecipient: RailgunERC20AmountRecipient[],
 ): Promise<string> => {
-  const memoText = 'Getting the salariess! 🍝😋';
-
   const feeData = await signer?.getFeeData();
-  console.log(
-    '======================= populating Proof with gasEstimateForDeposit =======================',
-  );
-  console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
+  const gasPrice = feeData?.gasPrice?.toHexString();
 
-  console.log('ethers.utils.hexlify(gasEstimate),', ethers.utils.hexlify(gasEstimate));
-  const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
-  console.log('gasPrice', gasPrice);
+  const maxFeePerGasString = feeData?.maxFeePerGas?.toHexString();
+  const maxPriorityFeePerGasString = feeData?.maxPriorityFeePerGas?.toHexString();
+
+  if (!maxFeePerGasString || !maxPriorityFeePerGasString) {
+    throw new Error('Gas info missing');
+  }
 
   const gasDetailsSerialized: TransactionGasDetailsSerialized = {
     evmGasType: EVMGasType.Type2, // Depends on the chain (BNB uses type 0) Goerli is type 1.
     gasEstimateString: gasEstimate.toHexString(), // Output from gasEstimateForDeposit
     // gasPriceString: gasPrice, // Current gas price   (This one is needed for type 1 tx)
-    maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
-    maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+    maxFeePerGasString: maxFeePerGasString,
+    maxPriorityFeePerGasString: maxPriorityFeePerGasString,
   };
   // const erc20AmountsByRecipient = tokenAmountRecipients;
   const showSenderAddressToRecipient = true;
@@ -38,12 +37,11 @@ export const createPopulateProvedTransfer = async (
   const sendWithPublicWallet = true;
   const overallBatchMinGasPrice = '0';
 
-  console.log('erc20AmountsByRecipient showing before populating', erc20AmountsByRecipient);
   const { serializedTransaction: serializedTx, error } = await populateProvedTransfer(
     NetworkName.EthereumGoerli,
     railgunWalletID,
     showSenderAddressToRecipient,
-    memoText,
+    null,
     erc20AmountsByRecipient,
     [], // nftAmountRecipients
     undefined, // relayerFeeTokenAmountRecipient
@@ -52,12 +50,7 @@ export const createPopulateProvedTransfer = async (
     gasDetailsSerialized,
   );
 
-  // console.log(
-  //   '!!!!!!!!!!!!!!!!!!!!!!!!!!!finished the populateProvedTransfer function!!!!!!!§!!!!!!!!!!!!!!!!!!!!',
-  // );
-
   if (error) {
-    console.log('There is ano error creating the populate Proof transaction');
     console.error(error);
     throw new Error(error);
   }
@@ -66,7 +59,5 @@ export const createPopulateProvedTransfer = async (
     throw new Error('no serializedTx');
   }
 
-  console.log('There is no error creating the populate Proof transaction');
-  console.log('serializedTransaction', serializedTx);
   return serializedTx;
 };

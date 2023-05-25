@@ -8,27 +8,33 @@ import {
   TransactionGasDetailsSerialized,
 } from '@railgun-community/shared-models';
 import { BigNumber, Signer } from 'ethers';
+import { getEncryptionKey } from './encryptionKey';
+import { RailgunERC20AmountRecipient } from '@railgun-community/shared-models';
 
 export const fetchGasEstimate = async (
   signer: Signer,
   wallet: LoadRailgunWalletResponse,
-  erc20AmountsByRecipient: [],
+  erc20AmountsByRecipient: RailgunERC20AmountRecipient[],
 ): Promise<BigNumber> => {
-  const memoText = 'Getting the salariess! 🍝😋';
   const feeData = await signer?.getFeeData();
-  console.log('FeeData?.gasPrice?.toString()', feeData?.gasPrice?.toString());
-  const gasPrice = feeData?.gasPrice?.toHexString() ?? '0x0100000000';
-  console.log('gasPrice', gasPrice);
+  const gasPrice = feeData?.gasPrice?.toHexString();
+
+  const maxFeePerGasString = feeData?.maxFeePerGas?.toHexString();
+  const maxPriorityFeePerGasString = feeData?.maxPriorityFeePerGas?.toHexString();
+
+  if (!maxFeePerGasString || !maxPriorityFeePerGasString) {
+    throw new Error('Gas info missing');
+  }
 
   const originalGasDetailsSerialized: TransactionGasDetailsSerialized = {
     evmGasType: EVMGasType.Type2,
     gasEstimateString: '0x00',
-    maxFeePerGasString: feeData?.maxFeePerGas?.toHexString() ?? '0x100000',
-    maxPriorityFeePerGasString: feeData?.maxPriorityFeePerGas?.toHexString() ?? '0x100000',
+    maxFeePerGasString: maxFeePerGasString,
+    maxPriorityFeePerGasString: maxPriorityFeePerGasString,
     // gasPriceString: gasPrice,
   };
 
-  const selectedTokenFeeAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'; //goerli dai
+  const selectedTokenFeeAddress = '0xdc31Ee1784292379Fbb2964b3B9C4124D8F89C60'; //goerli dai // TODO: should be in env
   const selectedRelayer = {
     feePerUnitGas: '0',
   };
@@ -38,15 +44,18 @@ export const fetchGasEstimate = async (
   };
 
   const sendWithPublicWallet = true;
+  const railgunWalletID = wallet?.railgunWalletInfo?.id;
+  const encryptionKey = getEncryptionKey();
 
-  const railgunWalletID = wallet?.railgunWalletInfo?.id || '0xnoWalletIDFound';
+  if (!railgunWalletID || !encryptionKey) {
+    throw new Error('Railgun wallet not configured');
+  }
 
-  console.log('erc20AmountsByRecipient showing before estimating', erc20AmountsByRecipient);
   const { gasEstimateString, error } = await gasEstimateForUnprovenTransfer(
     NetworkName.EthereumGoerli,
     railgunWalletID,
-    wallet?.encryptionKey,
-    memoText,
+    encryptionKey,
+    null,
     erc20AmountsByRecipient,
     [], // nftAmountRecipients
     originalGasDetailsSerialized,

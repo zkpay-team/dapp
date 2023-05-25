@@ -54,7 +54,6 @@ export const XmtpContextProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const initClient = async (wallet: Signer) => {
-    console.log('initClient w signer: ', wallet);
     if (wallet && !providerState.client && signer) {
       try {
         const keys = await Client.getKeys(signer, {
@@ -72,7 +71,7 @@ export const XmtpContextProvider = ({ children }: { children: ReactNode }) => {
           // getOneConversationMessages,
         });
       } catch (e: any) {
-        console.log(e);
+        console.error(e);
       }
     }
   };
@@ -102,7 +101,7 @@ export const XmtpContextProvider = ({ children }: { children: ReactNode }) => {
             conversation.context?.conversationId.startsWith(CONVERSATION_PREFIX),
           );
         } catch (e: any) {
-          console.log('Error listing conversations - ', e);
+          console.error('Error listing conversations - ', e);
         } finally {
           setProviderState({ ...providerState, loadingConversations: false });
         }
@@ -115,7 +114,7 @@ export const XmtpContextProvider = ({ children }: { children: ReactNode }) => {
                 // Returns a list of all messages to/from the peerAddress
                 messages = await conversation.messages();
               } catch (e: any) {
-                console.log('Error listing messages - ', e);
+                console.error('Error listing messages - ', e);
               }
               //Temp fix for conversation duplicates
               if (messages.length > 0) {
